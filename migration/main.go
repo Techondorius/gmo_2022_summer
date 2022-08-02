@@ -9,7 +9,7 @@ import (
 
 func main(){
 	db := model.ConnectionByTCP()
-	db.AutoMigrate(&sampleeee{})
+	db.AutoMigrate(&model.User{})
 	log.Println("!!")
 }
 

@@ -218,7 +218,7 @@ CookieのIDとTokenを参照して、承認する。
             "Sex": 1,
             "ConsumptedC": 500
         },{
-
+            ...
         }
     ]
 }
