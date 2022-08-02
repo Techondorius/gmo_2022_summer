@@ -4,16 +4,12 @@ import (
 	"log"
 	"gmo_2022_summer/model"
 
-	"gorm.io/gorm"
+	// "gorm.io/gorm"
 )
 
 func main(){
 	db := model.ConnectionByTCP()
 	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.PublicTrainings{})
 	log.Println("!!")
-}
-
-type sampleeee struct{
-	gorm.Model
-	Name string
 }
