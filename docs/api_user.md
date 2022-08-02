@@ -83,7 +83,7 @@ POST /api/regsiter
 ### リクエスト
 
 ```
-GET /api/checkDuplication/{id}
+GET /api/users/checkDuplication/{id}
 ```
 
 ### レスポンス
@@ -167,7 +167,7 @@ CookieのIDとTokenを参照して、承認する。
 ### リクエスト
 
 ```
-PUT /api/register
+PUT /api/users/editUser
 ```
 
 | param     | type   | description             |
@@ -241,7 +241,7 @@ CookieのIDとTokenを参照して、承認する。
 ### リクエスト
 
 ```
-GET /api/getUser
+GET /api/users/getUser
 ```
 
 | param | type | description      |
