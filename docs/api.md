@@ -1,5 +1,20 @@
 # API Document
 
+すべてのリクエストのレスポンスには状態メッセージ("OK"、403など)、タイムスタンプ(ISO8601準拠)などが記述される。以下例。
+
+```javascript
+{
+    {
+    "ret_msg": "OK",
+    "result": {
+        ...
+    }
+    "time_now": "1567108756.834357"
+}
+}
+```
+
+
 ## ユーザー作成 API
 
 ### リクエスト
@@ -8,200 +23,204 @@
 POST /api/regsiter
 ```
 
-| param      | type   | description        |
-| ----------- | ------ | ----------------- |
-| メアド      | string | メアド              |
-| ニックネーム | string | ページ内に表示する名前 |
-| パスワード   | string | パスワード           |
+| param     | type   | description          |
+| --------- | ------ | -------------------- |
+| ID        | string | ID(固有)              |
+| Name      | string | 表示名                |
+| Birthdate | date   | 誕生日                |
+| Sex       | int    | 性別(男、女、その他で1~3) |
+| Height    | int    | 身長                  |
+| Weight    | int    | 体重                  |
+| Password  | string | パスワード              |
 
+```javascript
+{
+    "ID": "Pi",
+    "Name": "ASDF",
+    "Birthdate": 2002-1-1,
+    "Sex": 1,
+    "Height": 169,
+    "Weight": 55,
+    "Password": "Raspberry"
+}
+```
 
 ### レスポンス
 
 #### 成功時
 
-| param                 | type   | description |
-| --------------------- | ------ | ----------- |
-| userid | number | ユーザーID    |
+| param              | type   | description          |
+| ------------------ | ------ | -------------------- |
+| detail[].ID        | string | ID                   |
+| detail[].Name      | string | 名前                  |
+| detail[].Birthdate | string | 誕生日                |
+| detail[].Objective | string | 目標消費カロリー         |
+| detail[].Sex       | int    | 性別(男、女、その他で1~3) |
 
 ```javascript
 {
-    "detail": [
-        {
-            "ID": number,
-            "FirstName": string,
-            "LastName": string,
-            "Hourly_wage": number
-        },
-        ...
+    "detail": {
+        "ID": "Pi",
+        "Name": "ASDF",
+        "Birthdate": 2002-1-1
+        "Objective": 100,
+        "Sex": 1
+    }
+}
+```
+
+目標消費カロリーは身長、体重、性別から算出する。
+
+
+## ID重複チェック API
+
+ユーザーIDは他のユーザーと重複できないため、既に同じIDのユーザーが居るか確認するためのエンドポイント
+
+### リクエスト
+
+```
+GET /api/{id}
+```
+
+### レスポンス
+
+#### 成功時
+
+| param         | type    | description  |
+| ------------- | ------- | ------------ |
+| Detail.ID     | string  | ID           |
+| Detail.Result | boolean | Trueで重複なし |
+
+```javascript
+{
+    "Detail": {
+        "ID": "Pia",
+        "Result": "True"
+    }
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
+
+
+## ユーザー編集 API
+
+### リクエスト
+
+```
+PUT /api/register
+```
+
+| param     | type   | description          |
+| --------- | ------ | -------------------- |
+| ID        | string | ID(固有)              |
+| Name      | string | 表示名                |
+| Birthdate | date   | 誕生日                |
+| Sex       | int    | 性別(男、女、その他で1~3) |
+| Objective | int    | 目標消費カロリー         |
+| Password  | string | パスワード              |
+
+```javascript
+{
+    "ID": "Pi",
+    "Name": "ASDF",
+    "Birthdate": 2002-1-2
+    "Sex": 1
+    "Objective": 100,
+    "Password": "Raspberry"
+}
+```
+
+CookieのIDとTokenを参照して、承認する。
+承認した場合のみ200、承認していない場合403エラー
+
+### レスポンス
+
+#### 成功時
+
+| param              | type   | description          |
+| ------------------ | ------ | -------------------- |
+| Detail.ID        | string | ID                   |
+| Detail.Name      | string | 名前                  |
+| Detail.Birthdate | string | 誕生日                |
+| Detail.Sex       | int    | 性別(男、女、その他で1~3) |
+| Detail.Objective | string | 目標消費カロリー         |
+
+```javascript
+{
+    "Message": "Created"
+    "Detail": {
+        "ID": "Pi",
+        "Name": "ASDF",
+        "Birthdate": 2002-1-2
+        "Sex": 1
+        "Objective": 100,
+    }
+}
+```
+
+### 失敗時
+
+#### Request bodyが不完全な時
+
+400 Bad Request
+
+#### Cookieでの承認が出来なかった場合
+
+403 Forbidden
+
+
+## ユーザーデータ取得 API
+
+### リクエスト
+
+```
+GET /api/getUser
+```
+
+| param | type | description      |
+| ----- | ---- | ---------------- |
+| ID[]  | int  | 検索するID(最大10個)|
+
+```javascript
+{
+    "ID": [
+        1, 2, 3, ...
     ]
 }
 ```
-
-## ユーザー作成 API
-
-### リクエスト
-
-```
-PUT /userManage/newUser
-```
-
-| param       | type   | description   |
-| ----------- | ------ | -----------   |
-| FirstName   | string | 名前           |
-| LastName    | string | 苗字           |
-| Hourly_wage | number | 時給(Optional) |
-
-
-```javascript
-{
-    "FirstName": string,
-    "LastName": string
-    "Hourly_wage": number
-}
-```
+CookieのIDとTokenを参照して、承認する。
+承認した場合のみ200、承認していない場合403エラー
 
 ### レスポンス
 
 #### 成功時
 
-| param               | type   | description |
-| ------------------- | ------ | ----------- |
-| message             | string | Created     |
-| detail[].ID         | number | ID          |
-| detail[].FirstName  | string | 名前         |
-| detail[].LastName   | string | 苗字         |
-| detail[].Hourly_wage| string | 時給         |
-
-
-```javascript
-{
-    "message": "Created"
-    "detail": {
-        "ID": number,
-        "FirstName": string,
-        "LastName": string
-        "Hourly_wage": number,
-    },
-    ...
-}
-```
-
-### 失敗時
-
-#### Request bodyが不完全な時
-
-400 Bad Request
-
-## ユーザー編集 API
-
-### リクエスト
-
-```
-PUT /userManage/editUser/{userID}
-```
-
-| param       | type   | description   |
-| ----------- | ------ | ------------- |
-| FirstName   | string | 名前(optional) |
-| LastName    | string | 苗字(optional) |
-| Hourly_wage | number | 時給(optional) |
+| param                | type   | description          |
+| -------------------- | ------ | -------------------- |
+| Detail[].ID          | string | ID                   |
+| Detail[].Name        | string | 名前                  |
+| Detail[].Birthdate   | string | 誕生日                |
+| Detail[].Sex         | int    | 性別(男、女、その他で1~3) |
+| Detail[].ConsumptedC | int    | 日間消費カロリー         |
 
 ```javascript
 {
-    "FirstName": string,
-    "LastName": string
-    "Hourly_wage": number,
-}
-```
+    "Detail": [
+        {
+            "ID": 1,
+            "Name": "Pi",
+            "Birthdate": 2002-1-1
+            "Sex": 1,
+            "ConsumptedC": 500
+        },{
 
-### レスポンス
-
-#### 成功時
-
-| param               | type   | description |
-| ------------------- | ------ | ----------- |
-| message             | string | Created     |
-| detail[].ID         | number | ID          |
-| detail[].FirstName  | string | 名前         |
-| detail[].LastName   | string | 苗字         |
-| detail[].Hourly_wage| string | 時給         |
-
-```javascript
-{
-    "message": "Created"
-    "detail": {
-        "ID": number,
-        "FirstName": string,
-        "LastName": string
-        "Hourly_wage": number,
-    },
-    ...
-}
-```
-
-### 失敗時
-
-#### Request bodyが不完全な時
-
-400 Bad Request
-
-## ユーザー編集 API
-
-### リクエスト
-
-```
-DELETE /userManage/deleteUser/{userID}
-```
-
-### レスポンス
-
-#### 成功時
-
-| param               | type   | description |
-| ------------------- | ------ | ----------- |
-| message             | string | Deleted     |
-
-```javascript
-{
-    "message": "Deleted"
-}
-```
-
-### 失敗時
-
-#### Request bodyが不完全な時
-
-400 Bad Request
-
-## ユーザー編集 API
-
-### リクエスト
-
-```
-POST /stamp/{userID}/in
-```
-
-### レスポンス
-
-#### 成功時
-
-| param                | type     | description          |
-| -------------------- | -------- | -------------------- |
-| message              | string   | Stamped successfully |
-| detail[].ID          | number   | スタンプID            |
-| detail[].UsersID     | number   | ユーザーID            |
-| detail[].In_datetime | datetime | 出勤時刻              |
-| detail[].Hourly_wage | number   | 時給                  |
-
-```javascript
-{
-    "message": "Stamped successfully"
-    "detail": {
-        "ID": 4,
-        "UsersID": 4,
-        "Hourly_wage": 1000,
-        "In_datetime": "2022/06/30 06:36"
-    }
+        }
+    ]
 }
 ```
 
