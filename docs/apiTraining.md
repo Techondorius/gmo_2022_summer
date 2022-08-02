@@ -67,14 +67,14 @@ CookieのIDとTokenを参照して、承認する。
 
 | column       | type    | details                       |
 | ------------ | ------- | ----------------------------- |
-| ID           | int     | トレーニングID(固有)              |
-| Name         | string  | トレーニング名                    |
-| UserTR       | boolean | ユーザー自作TRならtrue            |
-| ConsumptingC | int     | 自作TRなら(kcal)、初期TRならメッツ値 |
+| Detail[].ID           | int     | トレーニングID(固有)              |
+| Detail[].Name         | string  | トレーニング名                    |
+| Detail[].UserTR       | boolean | ユーザー自作TRならtrue            |
+| Detail[].ConsumptingC | int     | 自作TRなら(kcal)、初期TRならメッツ値 |
 
 ```json
 {
-    "Details": [
+    "Detail": [
         {
             "ID": 107
             "Name": "スクワット",
