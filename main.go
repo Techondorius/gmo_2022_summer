@@ -22,19 +22,41 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "good"})
 	})
+
+	// cookie is not required to this endpoints
+	cnr := r.Group("/api")
+	{
+		cnr.POST("/register", controller.Register)
+		cnr.GET("/login", controller.Login)
+	}
+
+	users := r.Group("/api/users")
+	{
+		users.GET("/checkDuplication/:userID", controller.CheckDuplication)
+		users.PUT("/editUser", controller.UpdateUser)
+		users.GET("/getUser", controller.GetUser)
+	}
+
+// -------------------------------------------------------------------------
+
+
 	r.GET("/create", controller.CreateUser)
+
 	r.GET("/ip", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": c.ClientIP()})
 	})
+
 	r.GET("/cookie", func(c *gin.Context) {
 		a, _ := c.Cookie("Cookie")
 		c.JSON(200, gin.H{"message": a})
 	})
+
 	r.GET("/gethash", func(c *gin.Context) {
 		password := []byte("password")
 		hashed, _ := bcrypt.GenerateFromPassword(password, 4)
 		c.JSON(200, gin.H{"message": hashed})
 	})
+
 	r.GET("/decodehash", func(c *gin.Context) {
 		password := []byte("password")
 		hashed, _ := bcrypt.GenerateFromPassword(password, 4)
@@ -45,6 +67,7 @@ func main() {
 			c.JSON(200, gin.H{"message": "True"})
 		}
 	})
+
 	r.Run()
 
 }
