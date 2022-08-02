@@ -83,7 +83,7 @@ POST /api/regsiter
 ### リクエスト
 
 ```
-GET /api/{id}
+GET /api/checkDuplication/{id}
 ```
 
 ### レスポンス
