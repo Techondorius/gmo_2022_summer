@@ -1,12 +1,12 @@
 package main
 
 import (
-	"gmo_2022_summer/controller"
+	"gmo_2022_summer/asdf/controller"
+
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-
-	"gorm.io/gorm"
 )
 
 type Product struct {
