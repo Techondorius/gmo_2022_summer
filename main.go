@@ -29,8 +29,7 @@ func main() {
 		users.GET("/getUser", controller.GetUser)
 	}
 
-// -------------------------------------------------------------------------
-
+	// -------------------------------------------------------------------------
 
 	r.GET("/create", controller.CreateUser)
 
@@ -40,13 +39,13 @@ func main() {
 
 	r.GET("/cookie", func(c *gin.Context) {
 		a, _ := c.Cookie("Cookie")
-		c.JSON(200, gin.H{"message":a})
+		c.JSON(200, gin.H{"message": a})
 	})
 
 	r.GET("/gethash", func(c *gin.Context) {
 		password := []byte("password")
 		hashed, _ := bcrypt.GenerateFromPassword(password, 4)
-		c.JSON(200, gin.H{"message":hashed})
+		c.JSON(200, gin.H{"message": hashed})
 	})
 
 	r.GET("/decodehash", func(c *gin.Context) {
@@ -54,9 +53,9 @@ func main() {
 		hashed, _ := bcrypt.GenerateFromPassword(password, 4)
 		err := bcrypt.CompareHashAndPassword(hashed, password)
 		if err != nil {
-			c.JSON(200, gin.H{"message":"False"})
+			c.JSON(200, gin.H{"message": "False"})
 		} else {
-			c.JSON(200, gin.H{"message":"True"})
+			c.JSON(200, gin.H{"message": "True"})
 		}
 	})
 

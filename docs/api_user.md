@@ -86,6 +86,9 @@ POST /api/regsiter
 GET /api/users/checkDuplication/{id}
 ```
 
+CookieのIDとTokenを参照して、承認する。
+承認した場合のみ200、承認していない場合403エラー
+
 ### レスポンス
 
 #### 成功時
