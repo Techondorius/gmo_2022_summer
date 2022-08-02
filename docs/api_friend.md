@@ -15,7 +15,7 @@
 ```
 
 
-## フレンド追加 API
+## フォロー API
 
 ### リクエスト
 
@@ -64,12 +64,12 @@ CookieのIDとTokenを参照して、承認する。
 403 Forbidden
 
 
-## フレンド追加 API
+## アンフォロー API
 
 ### リクエスト
 
 ```
-POST /api/friend/follow
+POST /api/friend/unfollow
 ```
 
 | param       | type | description    |
@@ -107,6 +107,46 @@ CookieのIDとTokenを参照して、承認する。
 #### Request bodyが不完全な時
 
 400 Bad Request
+
+#### Cookieでの承認が出来なかった場合
+
+403 Forbidden
+
+
+## フォローリスト API
+
+### リクエスト
+
+```
+POST /api/friend/follow/list
+```
+CookieのIDとTokenを参照して、承認する。
+承認した場合のみ200、承認していない場合403エラー
+
+### レスポンス
+
+#### 成功時
+
+200 OK
+
+| param               | type  | description  |
+| ------------------- | ----- | ------------ |
+| Detail.FollowList[] | []string | フォロー一覧リスト |
+
+```javascript
+{
+    "Detail": [
+        "Gin",
+        "Echo",
+        "DJango",
+        "Flask",
+        "FastAPI",
+        ...
+    ]
+}
+```
+
+### 失敗時
 
 #### Cookieでの承認が出来なかった場合
 

@@ -25,7 +25,7 @@ POST /api/regsiter
 
 | param     | type   | description          |
 | --------- | ------ | -------------------- |
-| ID        | string | ID(固有)              |
+| ID        | string | ID(固有, 最小2文字、最大20文字)|
 | Name      | string | 表示名                |
 | Birthdate | date   | 誕生日                |
 | Sex       | int    | 性別(男、女、その他で1~3) |
