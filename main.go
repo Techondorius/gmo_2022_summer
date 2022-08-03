@@ -2,6 +2,7 @@ package main
 
 import (
 	"gmo_2022_summer/controller"
+	"gmo_2022_summer/model"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -17,6 +18,7 @@ func main() {
 
 	// cookie is not required to this endpoints
 	cnr := r.Group("/api")
+	cnr.Use(CheckCookie())
 	{
 		cnr.POST("/register", controller.Register)
 		cnr.GET("/login", controller.Login)
@@ -27,6 +29,12 @@ func main() {
 		users.GET("/checkDuplication/:userID", controller.CheckDuplication)
 		users.PUT("/editUser", controller.UpdateUser)
 		users.GET("/getUser", controller.GetUser)
+	}
+
+	utr := r.Group("/api/customeTR")
+	utr.Use(CheckCookie())
+	{
+		utr.GET("/", controller.GetTRHis)
 	}
 
 	// -------------------------------------------------------------------------
@@ -61,4 +69,22 @@ func main() {
 
 	r.Run()
 
+}
+
+func CheckCookie() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userID, _ := c.Cookie("userID")
+		token, _ := c.Cookie("token")
+		if res := model.FindCookie(userID, token); res == "" {
+			c.JSON(403, nil)
+		}
+		pw := model.GetPassword(userID)
+		if err := bcrypt.CompareHashAndPassword([]byte(token), []byte(pw)); err != nil {
+			c.JSON(403, nil)
+			c.Abort()
+		} else {
+
+			c.Next()
+		}
+	}
 }

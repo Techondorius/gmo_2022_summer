@@ -13,6 +13,7 @@ func main() {
 	db.AutoMigrate(&model.UserTraining{})
 	db.AutoMigrate(&model.PublicTraining{})
 	db.AutoMigrate(&model.TrainingHistory{})
+	db.AutoMigrate(&model.CookieData{})
 
 	log.Println("!!")
 }

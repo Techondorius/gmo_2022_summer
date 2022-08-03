@@ -39,3 +39,10 @@ type TrainingHistory struct {
 	TLength      string    `gorm:"not null"`
 	ConsumptingC int       `gorm:"not null"`
 }
+
+type CookieData struct {
+	ID     int       `gorm:"primaryKey"`
+	UserID string    `gorm:"not null"`
+	Cookie string    `gorm:"not null"`
+	Expiry time.Time `gorm:"not null"`
+}
