@@ -12,5 +12,13 @@ func UserCreate(u User) error {
 		return nil
 	}
 }
+func UserUpdate(u User) error {
+	db := ConnectionByTCP()
 
-
+	result := db.Save(u)
+	if result.Error != nil {
+		return result.Error
+	} else {
+		return nil
+	}
+}
