@@ -1,15 +1,18 @@
 package main
 
 import (
-	"log"
 	"gmo_2022_summer/model"
-
+	"log"
 	// "gorm.io/gorm"
 )
 
-func main(){
+func main() {
 	db := model.ConnectionByTCP()
+
 	db.AutoMigrate(&model.User{})
-	db.AutoMigrate(&model.PublicTrainings{})
+	db.AutoMigrate(&model.UserTraining{})
+	db.AutoMigrate(&model.PublicTraining{})
+	db.AutoMigrate(&model.TrainingHistory{})
+
 	log.Println("!!")
 }
