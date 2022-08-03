@@ -22,7 +22,7 @@ func Register(c *gin.Context) {
 	}
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)
-		c.JSON(200, gin.H{"message": "Register Failed"})
+		c.JSON(200, gin.H{"message": "Update Failed"})
 		return
 	}
 	//db.Create(&product) // pass pointer of data to Create
@@ -40,7 +40,7 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	
+
 	c.JSON(200, gin.H{"message": "Login"})
 }
 
@@ -50,7 +50,51 @@ func CheckDuplication(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	var u map[string]any
+	u := model.UpdateUser{
+		ID:        "Pi",
+		Name:      "GHJK",
+		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		Sex:       1,
+		Height:    169,
+		Weight:    55,
+		Objective: 100,
+		Password:  "Raspberry",
+		NPassword: "R4spberry",
+	}
+
+	newu := model.User{}
+	newu.ID = u.ID
+	newu.Name = u.Name
+	newu.Birthdate = u.Birthdate
+	newu.Sex = u.Sex
+	newu.Height = u.Height
+	newu.Weight = u.Weight
+	newu.Objective = u.Objective
+	newu.Password = u.Password
+
+	//db.Model(&user).Updates(User{Name: "hello", Age: 18, Active: false})
+	//log.Println(u.ID)
+
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Register Failed"})
+		return
+	}
+	model.UserUpdate(newu)
+	//log.Println(u)
+	//model.UserCreate(u)
+	log.Println(u)
+	c.JSON(200, gin.H{
+		"detail": map[string]any{
+			"ID":        u.ID,
+			"detail":    u.Name,
+			"BirthDate": u.Birthdate,
+			"Sex":       u.Sex,
+			"Height":    u.Height,
+			"Weight":    u.Weight,
+			"Password":  u.Password,
+			"NPassword": u.NPassword,
+		}})
 	c.JSON(200, gin.H{"message": "Update"})
 }
 
