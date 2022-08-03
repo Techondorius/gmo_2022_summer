@@ -37,6 +37,11 @@ func main() {
 		users.GET("/getUser", controller.GetUser)
 	}
 
+	custometr := r.Group("/api/customeTR")
+	{
+        custometr.POST("/add", controller.AddCustomeTR)
+	}
+
 // -------------------------------------------------------------------------
 
 

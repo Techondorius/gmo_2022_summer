@@ -9,7 +9,7 @@ import (
 )
 
 func Register(c *gin.Context) {
-	
+
 	c.JSON(200, gin.H{"message": "Register"})
 }
 
@@ -117,5 +117,31 @@ func CreateUser(c *gin.Context) {
 			"Sex":       u.Sex,
 			"Height":    u.Height,
 			"Weight":    u.Objective,
+		}})
+}
+
+func AddCustomeTR(c *gin.Context) {
+	u := model.UserTraining{
+		Name:    "kensui",
+		Calorie: "10",
+	}
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Update Failed"})
+		return
+	}
+	newu := model.UserTraining{}
+	newu.UserID = "PI" //cookieから取得
+	newu.Name = u.Name
+	newu.Calorie = u.Calorie
+
+	model.AddCustomeTR(newu)
+	log.Println(u)
+	c.JSON(200, gin.H{
+		"detail": map[string]any{
+			"UserId":  "PI", //Cookieから取得
+			"UserTR":  true,
+			"Name":    u.Name,
+			"Calolie": u.Calorie,
 		}})
 }
