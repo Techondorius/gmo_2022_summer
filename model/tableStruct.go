@@ -4,23 +4,38 @@ import (
 	"time"
 )
 
-type User struct{
-	ID string `gorm:"primaryKey"`
-	Name string `gorm:"not null"`
-	Birthdate time.Time `gorm:"not null"`
-	Sex int `gorm:"size:4;not null"`
-	Height int `gorm:"not null"`
-	Weight int `gorm:"not null"`
-	Objective int `gorm:"not null"`
-	Password string `gorm:"not null"`
+type User struct {
+	ID              string            `gorm:"size:20;primaryKey"`
+	Name            string            `gorm:"not null"`
+	Birthdate       time.Time         `gorm:"not null"`
+	Sex             int               `gorm:"size:4;not null"`
+	Height          int               `gorm:"not null"`
+	Weight          int               `gorm:"not null"`
+	Objective       int               `gorm:"not null"`
+	Password        string            `gorm:"not null"`
+	UserTrainings   []UserTraining    `gorm:"foreignKey:UserID"`
+	TrainingHistory []TrainingHistory `gorm:"foreignKey:UserID"`
 }
 
-type PublicTrainings struct{
-	ID int `gorm:"primaryKey"`
+type PublicTraining struct {
+	ID   int    `gorm:"primaryKey"`
 	Name string `gorm:"not null"`
-	Calorie int `gorm:"not null"`	// 単位あたり消費カロリー
-	Unit string `gorm:"not null"`	// 単位
-	UnitTime int `gorm:"not null"`	// 時間単位/回数単位
+	Mets int    `gorm:"not null"`
 }
 
-// カロリー計算方法 = Calorie * UnitTime * 回数(or n分)
+type UserTraining struct {
+	ID      int    `gorm:"primaryKey"`
+	UserID  string `gorm:"not null"`
+	Name    string `gorm:"not null"`
+	Calorie string `gorm:"not null"`
+}
+
+type TrainingHistory struct {
+	ID           int       `gorm:"primaryKey"`
+	UserID       string    `gorm:"not null"`
+	CreatedAt    time.Time `gorm:"autoCreateTime"`
+	UserTraining bool      `gorm:"not null"`
+	TName        string    `gorm:"not null"`
+	TLength      string    `gorm:"not null"`
+	ConsumptingC int       `gorm:"not null"`
+}
