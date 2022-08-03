@@ -9,34 +9,8 @@ import (
 )
 
 func Register(c *gin.Context) {
-	// var u model.User
-	//u := model.User
-	u := model.User{
-		ID:        "Pi",
-		Name:      "ASDF",
-		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
-		Sex:       1,
-		Height:    169,
-		Weight:    55,
-		Password:  "Raspberry",
-	}
-	if err := c.Bind(&u); err != nil {
-		log.Println(err)
-		c.JSON(200, gin.H{"message": "Update Failed"})
-		return
-	}
-	//db.Create(&product) // pass pointer of data to Create
-	model.UserCreate(u)
-	log.Println(u)
-	c.JSON(200, gin.H{
-		"detail": map[string]any{
-			"ID":        u.ID,
-			"detail":    u.Name,
-			"BirthDate": u.Birthdate,
-			"Sex":       u.Sex,
-			"Height":    u.Height,
-			"Weight":    u.Objective,
-		}})
+	
+	c.JSON(200, gin.H{"message": "Register"})
 }
 
 func Login(c *gin.Context) {
@@ -116,5 +90,32 @@ func ShowTables() {
 
 func CreateUser(c *gin.Context) {
 	ShowTables()
-	c.JSON(200, "aaa")
+	// var u model.User
+	//u := model.User
+	u := model.User{
+		ID:        "Pi",
+		Name:      "ASDF",
+		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		Sex:       1,
+		Height:    169,
+		Weight:    55,
+		Password:  "Raspberry",
+	}
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Update Failed"})
+		return
+	}
+	//db.Create(&product) // pass pointer of data to Create
+	model.UserCreate(u)
+	log.Println(u)
+	c.JSON(200, gin.H{
+		"detail": map[string]any{
+			"ID":        u.ID,
+			"detail":    u.Name,
+			"BirthDate": u.Birthdate,
+			"Sex":       u.Sex,
+			"Height":    u.Height,
+			"Weight":    u.Objective,
+		}})
 }
