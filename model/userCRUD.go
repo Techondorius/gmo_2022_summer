@@ -79,6 +79,11 @@ func GetNameConsumptingC(id int, is_custome bool) (baseCalorie int) {
 	}
 	_ = db.Debug().Where("id = ?", id).Find(&pt)
 	return pt.Mets
+	//log.Println(&pt)
+	//log.Println(pt.Mets)
+
+	//db.Where("name = ? AND age = ?", "jinzhu", "22").Find(&)
+	// SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
 }
 
 //カスタムトレーニング追加
