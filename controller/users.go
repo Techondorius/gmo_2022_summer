@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/copier"
 	"gmo_2022_summer/model"
 	"golang.org/x/crypto/bcrypt"
-	"log"
+	//"log"
 	"math"
 	"time"
 )
@@ -26,13 +26,13 @@ func checkPW(id string, pw string) bool {
 
 func Register(c *gin.Context) {
 	type request struct {
-		ID        string `json:"ID"`
-		Name      string `json:"Name"`
-		Birthdate int    `json:"Birthdate"`
-		Sex       int    `json:"Sex"`
-		Height    int    `json:"Height"`
-		Weight    int    `json:"Weight"`
-		Password  string `json:"Password"`
+		ID        string `json:"ID" binding:"required"`
+		Name      string `json:"Name" binding:"required"`
+		Birthdate int    `json:"Birthdate" binding:"required"`
+		Sex       int    `json:"Sex" binding:"required"`
+		Height    int    `json:"Height" binding:"required"`
+		Weight    int    `json:"Weight" binding:"required"`
+		Password  string `json:"Password" binding:"required"`
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -185,36 +185,42 @@ func UpdateUser(c *gin.Context) {
 //user_idの取り方
 //今日のカロリーを算出する
 func GetUser(c *gin.Context) {
-	tt := model.TrainingTime{
-		UserID:    "UO",
-		StartTime: 1659512053,
-		EndTime:   1659684853,
+	type request struct {
+		ID        int `json:"ID" binding:"required"`
+		StartTime int `json:"StartTime" binding:"required"`
+		EndTime   int `json:"EndTime" binding:"required"`
 	}
-	u := model.User{}
-	gu := model.GetUser(tt.UserID)
-	//今日のカロリーを取得したい
-	dtstart := time.Unix(int64(tt.StartTime), 0)
-	dtstop := time.Unix(int64(tt.EndTime), 0)
-	td := model.ReadTrainingHistory(tt.UserID, dtstart, dtstop)
-	calorie := 0
-	log.Println(td)
-	for i := 0; i < len(td); i++ {
-		log.Println(td[i])
-		calorie += td[i].ConsumptingC
-	}
-	log.Println(calorie)
-	// type gu is []User
-	if err := c.Bind(&u); err != nil {
-		log.Println(err)
-		c.JSON(200, gin.H{"message": "Update Failed"})
+	var req request
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, nil)
 		return
 	}
-	c.JSON(200, gin.H{
-		"Detail": map[string]any{
-			"ID":           gu.ID,
-			"Name":         gu.Name,
-			"Birthdate":    gu.Birthdate,
-			"Sex":          gu.Sex,
-			"Consumpted_C": calorie,
-		}})
+	/*
+		u := model.User{}
+		gu := model.GetUser(tt.UserID)
+		//今日のカロリーを取得したい
+		dtstart := time.Unix(int64(tt.StartTime), 0)
+		dtstop := time.Unix(int64(tt.EndTime), 0)
+		td := model.ReadTrainingHistory(tt.UserID, dtstart, dtstop)
+		calorie := 0
+		log.Println(td)
+		for i := 0; i < len(td); i++ {
+			log.Println(td[i])
+			calorie += td[i].ConsumptingC
+		}
+		log.Println(calorie)
+		// type gu is []User
+		if err := c.Bind(&u); err != nil {
+			log.Println(err)
+			c.JSON(200, gin.H{"message": "Update Failed"})
+			return
+		}
+		c.JSON(200, gin.H{
+			"Detail": map[string]any{
+				"ID":           gu.ID,
+				"Name":         gu.Name,
+				"Birthdate":    gu.Birthdate,
+				"Sex":          gu.Sex,
+				"Consumpted_C": calorie,
+			}})*/
 }

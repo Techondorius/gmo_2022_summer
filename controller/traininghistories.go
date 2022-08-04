@@ -6,6 +6,6 @@ func AddTrainingHistory(c *gin.Context) {
 	return
 }
 
-func TrainingList(c *gin.Context) {
+func ShowTrainingHistory(c *gin.Context) {
 	return
 }

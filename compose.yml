@@ -3,13 +3,9 @@ version: '3.9'
 services:
   app:
     container_name: app
-    build:
-      context: .
-      dockerfile: ./docker/app/Dockerfile
+    image: kazoomy/test_api
     ports:
       - "3000:8080"
-    volumes:
-      - .:/go/src
     tty: true
     depends_on:
       - "db"
@@ -22,6 +18,8 @@ services:
     image: mysql:8.0.15
     volumes:
       - ./tmp/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
     environment:
       TZ: Asia/Tokyo
       MYSQL_DATABASE: gin_app
