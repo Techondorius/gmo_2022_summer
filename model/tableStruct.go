@@ -5,14 +5,14 @@ import (
 )
 
 type User struct {
-	ID        string    `gorm:"primaryKey"`
-	Name      string    `gorm:"not null"`
-	Birthdate time.Time `gorm:"not null"`
-	Sex       int       `gorm:"size:4;not null"`
-	Height    int       `gorm:"not null"`
-	Weight    int       `gorm:"not null"`
-	Objective int       `gorm:"not null"`
-	Password  string    `gorm:"not null"`
+	ID        string `gorm:"primaryKey"`
+	Name      string `gorm:"not null"`
+	Birthdate int    `gorm:"not null"`
+	Sex       int    `gorm:"size:4;not null"`
+	Height    int    `gorm:"not null"`
+	Weight    int    `gorm:"not null"`
+	Objective int    `gorm:"not null"`
+	Password  string `gorm:"not null"`
 }
 
 type UpdateUser struct {

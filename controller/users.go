@@ -65,20 +65,16 @@ func UpdateUser(c *gin.Context) {
 		Height    int    `json:"Height"`
 		Weight    int    `json:"Weight"`
 		Password  string `json:"Password"`
+		NPassword string `json:"NPassword"`
 	}
 	var req request
 
-	u := model.UpdateUser{
-		ID:        "Pi",
-		Name:      "GHJK",
-		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
-		Sex:       1,
-		Height:    169,
-		Weight:    55,
-		Objective: 100,
-		Password:  "Raspberry",
-		NPassword: "R4spberry",
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, nil)
+		return
 	}
+
+	u := req
 
 	newu := model.User{}
 	newu.ID = u.ID
@@ -87,17 +83,9 @@ func UpdateUser(c *gin.Context) {
 	newu.Sex = u.Sex
 	newu.Height = u.Height
 	newu.Weight = u.Weight
-	newu.Objective = u.Objective
+	newu.Objective =
 	newu.Password = u.Password
 
-	//db.Model(&user).Updates(User{Name: "hello", Age: 18, Active: false})
-	//log.Println(u.ID)
-
-	if err := c.Bind(&u); err != nil {
-		log.Println(err)
-		c.JSON(200, gin.H{"message": "Register Failed"})
-		return
-	}
 	model.UserUpdate(newu)
 	//log.Println(u)
 	//model.UserCreate(u)
