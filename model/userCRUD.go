@@ -1,7 +1,7 @@
 package model
 
 // "gorm.io/gorm"
-import(
+import (
 	"log"
 )
 
@@ -37,4 +37,18 @@ func AddCustomeTR(u UserTraining) error {
 	} else {
 		return nil
 	}
+}
+
+func ReadPublicTrainigs() []PublicTraining {
+	db := Connection()
+	var pt []PublicTraining
+	_ := db.Find(&pt)
+	return pt
+}
+
+func ReadUserTrainings(id string) []UserTraining {
+	db := Connection()
+	var ut []UserTraining
+	_ := db.Where("user_id = ?", id).Find(&ut)
+	return ut
 }
