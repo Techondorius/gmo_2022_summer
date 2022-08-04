@@ -28,7 +28,7 @@ func main() {
 	{
 		cnr.POST("/register", controller.Register)
 		cnr.GET("/login", controller.Login)
-		//cnr.POST("/training/add", controller.TrainingAdd)
+		cnr.POST("/training/add", controller.TrainingAdd)
 	}
 
 	users := r.Group("/api/users")

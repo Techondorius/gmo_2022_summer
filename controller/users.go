@@ -3,35 +3,123 @@ package controller
 import (
 	"gmo_2022_summer/model"
 	"log"
+	"math"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 )
 
 func Register(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "Register"})
+	type request struct {
+		ID        string `json:"ID"`
+		Name      string `json:"Name"`
+		Birthdate int    `json:"Birthdate"`
+		Sex       int    `json:"Sex"`
+		Height    int    `json:"Height"`
+		Weight    int    `json:"Weight"`
+		Password  string `json:"Password"`
+	}
+	var req request
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, nil)
+		return
+	}
+	var u model.User
+	if err := copier.Copy(&u, &req); err != nil {
+		c.JSON(400, nil)
+		return
+	}
+
+	// 年齢計算
+	bDtimeTime := time.Unix(int64(u.Birthdate), 0)
+	age := RoundTime((time.Now()).Sub(bDtimeTime).Seconds() / 31207680)
+
+	// objective計算
+	if u.Sex == 1 {
+		if age <= 7 {
+			u.Objective = 1550
+		} else if age <= 9 {
+			u.Objective = 1850
+		} else if age <= 11 {
+			u.Objective = 2250
+		} else if age <= 14 {
+			u.Objective = 2600
+		} else if age <= 17 {
+			u.Objective = 2800
+		} else if age <= 29 {
+			u.Objective = 2650
+		} else if age <= 49 {
+			u.Objective = 2700
+		} else if age <= 64 {
+			u.Objective = 2600
+		} else if age <= 74 {
+			u.Objective = 2400
+		} else {
+			u.Objective = 2100
+		}
+	} else {
+		if age <= 7 {
+			u.Objective = 1450
+		} else if age <= 9 {
+			u.Objective = 1700
+		} else if age <= 11 {
+			u.Objective = 2100
+		} else if age <= 14 {
+			u.Objective = 2400
+		} else if age <= 17 {
+			u.Objective = 2300
+		} else if age <= 29 {
+			u.Objective = 2000
+		} else if age <= 49 {
+			u.Objective = 2050
+		} else if age <= 64 {
+			u.Objective = 1950
+		} else if age <= 74 {
+			u.Objective = 1850
+		} else {
+			u.Objective = 1650
+		}
+	}
+
+	if err := model.UserCreate(u); err != nil {
+		c.JSON(400, gin.H{"message": "ID might be already taken"})
+		return
+	}
+
+	c.JSON(200, u)
 }
 
 //トップページのトレーニング登録画面
-/*
+
 func TrainingAdd(c *gin.Context) {
-	u := model.TrainingHistory{
-		ID: 120,
-		//CreatedAt:    time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
-		UserTraining: true,
-		TLength:      "60",
+	u := model.TrainingAddst{
+		ID:       1,
+		IsCustom: false,
+		TLength:  60,
+		TWhen:    1659592629,
 	}
+	model.GetNameConsumptingC(u.ID, u.IsCustom)
+	/*
+		newu := model.TrainingHistory{}
+
+		newu.UserID = "PI"
+		newu.CreatedAt = time.Now()
+		newu.UserTraining = u.IsCustom
+		newu.TName = //name
+		newu.TLength = u.TLength
+		newu.ConsumptingC = */
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)
 		c.JSON(200, gin.H{"message": "Update Failed"})
 		return
 	}
-	db := model.ConnectionByTCP()
+	//db := model.ConnectionByTCP()
 	//今日の
 
-	var i model.UserTraining
-	result := db.Where("user_id = ?", "1").Find(&i)
-	cal := result["calorie"]
+	//var i model.UserTraining
+	//result := db.Where("user_id = ?", "1").Find(&i)
+	//cal := result["calorie"]
 
 	log.Println(u)
 	c.JSON(200, gin.H{
@@ -43,7 +131,7 @@ func TrainingAdd(c *gin.Context) {
 			"ConsumptedC": 500,
 		}})
 	c.JSON(200, gin.H{"message": "TrainingAdd"})
-}*/
+}
 
 func Login(c *gin.Context) {
 
@@ -55,6 +143,21 @@ func CheckDuplication(c *gin.Context) {
 	c.JSON(200, gin.H{"message": true})
 }
 
+func RoundTime(input float64) int {
+	var result float64
+
+	if input < 0 {
+		result = math.Ceil(input - 0.5)
+	} else {
+		result = math.Floor(input + 0.5)
+	}
+
+	// only interested in integer, ignore fractional
+	i, _ := math.Modf(result)
+
+	return int(i)
+}
+
 func UpdateUser(c *gin.Context) {
 
 	type request struct {
@@ -64,6 +167,7 @@ func UpdateUser(c *gin.Context) {
 		Sex       int    `json:"Sex"`
 		Height    int    `json:"Height"`
 		Weight    int    `json:"Weight"`
+		Objective int    `json:"Objective"`
 		Password  string `json:"Password"`
 		NPassword string `json:"NPassword"`
 	}
@@ -83,8 +187,61 @@ func UpdateUser(c *gin.Context) {
 	newu.Sex = u.Sex
 	newu.Height = u.Height
 	newu.Weight = u.Weight
-	newu.Objective =
+	newu.Objective = u.Objective
 	newu.Password = u.Password
+
+	/*
+		// 年齢計算
+		bDtimeTime := time.Unix(int64(newu.Birthdate), 0)
+		age := RoundTime((time.Now()).Sub(bDtimeTime).Seconds() / 31207680)
+
+		// objective計算
+		if u.Sex == 1 {
+			if age <= 7 {
+				newu.Objective = 1550
+			} else if age <= 9 {
+				newu.Objective = 1850
+			} else if age <= 11 {
+				newu.Objective = 2250
+			} else if age <= 14 {
+				newu.Objective = 2600
+			} else if age <= 17 {
+				newu.Objective = 2800
+			} else if age <= 29 {
+				newu.Objective = 2650
+			} else if age <= 49 {
+				newu.Objective = 2700
+			} else if age <= 64 {
+				newu.Objective = 2600
+			} else if age <= 74 {
+				newu.Objective = 2400
+			} else {
+				newu.Objective = 2100
+			}
+		} else {
+			if age <= 7 {
+				newu.Objective = 1450
+			} else if age <= 9 {
+				newu.Objective = 1700
+			} else if age <= 11 {
+				newu.Objective = 2100
+			} else if age <= 14 {
+				newu.Objective = 2400
+			} else if age <= 17 {
+				newu.Objective = 2300
+			} else if age <= 29 {
+				newu.Objective = 2000
+			} else if age <= 49 {
+				newu.Objective = 2050
+			} else if age <= 64 {
+				newu.Objective = 1950
+			} else if age <= 74 {
+				newu.Objective = 1850
+			} else {
+				newu.Objective = 1650
+			}
+		}
+	*/
 
 	model.UserUpdate(newu)
 	//log.Println(u)
@@ -143,13 +300,13 @@ func GetUser(c *gin.Context) {
 
 func CreateUser(c *gin.Context) {
 	u := model.User{
-		ID:        "Pi",
-		Name:      "ASDF",
-		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
-		Sex:       1,
-		Height:    169,
-		Weight:    55,
-		Password:  "Raspberry",
+		ID:   "Pi",
+		Name: "ASDF",
+		//Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		Sex:      1,
+		Height:   169,
+		Weight:   55,
+		Password: "Raspberry",
 	}
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)

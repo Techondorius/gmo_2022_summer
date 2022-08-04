@@ -1,9 +1,5 @@
 package model
 
-import (
-	"time"
-)
-
 type User struct {
 	ID        string `gorm:"primaryKey"`
 	Name      string `gorm:"not null"`
@@ -16,13 +12,13 @@ type User struct {
 }
 
 type UpdateUser struct {
-	ID        string    `gorm:"primaryKey"`
-	Name      string    `gorm:"not null"`
-	Birthdate time.Time `gorm:"not null"`
-	Sex       int       `gorm:"size:4;not null"`
-	Height    int       `gorm:"not null"`
-	Weight    int       `gorm:"not null"`
-	Objective int       `gorm:"not null"`
+	ID        string `gorm:"primaryKey"`
+	Name      string `gorm:"not null"`
+	Birthdate int    `gorm:"not null"`
+	Sex       int    `gorm:"size:4;not null"`
+	Height    int    `gorm:"not null"`
+	Weight    int    `gorm:"not null"`
+	Objective int    `gorm:"not null"`
 	Password  string
 	NPassword string
 }
@@ -42,13 +38,13 @@ type UserTraining struct {
 }
 
 type TrainingHistory struct {
-	ID           int       `gorm:"primaryKey"`
-	UserID       string    `gorm:"not null"`
-	CreatedAt    time.Time `gorm:"autoCreateTime"`
-	UserTraining bool      `gorm:"not null"`
-	TName        string    `gorm:"not null"`
-	TLength      string    `gorm:"not null"`
-	ConsumptingC int       `gorm:"not null"`
+	ID           int    `gorm:"primaryKey"`
+	UserID       string `gorm:"not null"`
+	CreatedAt    int    `gorm:"not null"`
+	UserTraining bool   `gorm:"not null"`
+	TName        string `gorm:"not null"`
+	TLength      string `gorm:"not null"`
+	ConsumptingC int    `gorm:"not null"`
 }
 
 type TRLIst struct {
@@ -62,4 +58,11 @@ type TrainingTime struct {
 	UserID    string
 	StartTime int
 	EndTime   int
+}
+
+type TrainingAddst struct {
+	ID       int
+	IsCustom bool
+	TLength  int
+	TWhen    int
 }
