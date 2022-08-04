@@ -17,26 +17,37 @@ func Register(c *gin.Context) {
 func TrainingAdd(c *gin.Context) {
 	ta := model.TrainingAddst{
 		ID:       1,
+		UserID:   "Pi",
 		IsCustom: false,
 		TLength:  60,
 		TWhen:    1659592629,
 	}
-	u := model.User{}
-	//cal := model.GetNameConsumptingC(ta.ID, ta.IsCustom)
-	//weight := model.GetUserWeight(u.ID)
+	cal := model.GetNameConsumptingC(ta.ID, ta.IsCustom)
+	weight := model.GetUser(ta.UserID).Weight
 	if ta.IsCustom {
-		//Calorie := cal * ta.TLength
+
+		calorie := cal
 	} else {
-		//Calorie := cal * u.Weight * ta.TLength
+		c := float64(cal) * float64(weight) * float64(ta.TLength) * 1.05
+		calorie := int(c / 1)
 	}
 
-	if err := c.Bind(&u); err != nil {
-		log.Println(err)
-		c.JSON(200, gin.H{"message": "Update Failed"})
+	res := model.TrainingHistory{
+		UserID:       ta.UserID,
+		TWhen:        ta.TWhen,
+		UserTraining: ta.IsCustom,
+		TName:        "",
+		TLength:      "",
+		ConsumptingC: 0,
+	}
+
+	if err := model.CreateTrainingHistory(); err != nil {
+		c.JSON(400, nil)
 		return
+	} else {
+		c.JSON(200, nil)
 	}
 
-	log.Println(u)
 	c.JSON(200, gin.H{
 		"Detail": map[string]any{
 			"ID": 1004,
@@ -45,7 +56,7 @@ func TrainingAdd(c *gin.Context) {
 			"TLength": 120,
 			//"ConsumptingC": Calorie,
 		}})
-	c.JSON(200, gin.H{"message": "TrainingAdd"})
+	c.JSON(200, gin.H{"message": "CreateTrainingHistory"})
 }
 
 func Login(c *gin.Context) {
@@ -59,10 +70,22 @@ func CheckDuplication(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	u := model.UpdateUser{
+	type request struct {
+		ID        string
+		Name      string
+		Birthdate int
+		Sex       int
+		Height    int
+		Weight    int
+		Objective int
+		Password  string
+		NPassword string
+	}
+
+	u := request{
 		ID:        "Pi",
 		Name:      "GHJK",
-		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		Birthdate: 12341234,
 		Sex:       1,
 		Height:    169,
 		Weight:    55,
@@ -89,9 +112,9 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "Register Failed"})
 		return
 	}
-	model.UserUpdate(newu)
+	model.UpdateUser(newu)
 	//log.Println(u)
-	//model.UserCreate(u)
+	//model.CreateUser(u)
 	log.Println(u)
 	c.JSON(200, gin.H{
 		"detail": map[string]any{
@@ -120,7 +143,7 @@ func GetUser(c *gin.Context) {
 	//今日のカロリーを取得したい
 	dtstart := time.Unix(int64(tt.StartTime), 0)
 	dtstop := time.Unix(int64(tt.EndTime), 0)
-	td := model.PeriodData(tt.UserID, dtstart, dtstop)
+	td := model.ReadTrainingHistory(tt.UserID, dtstart, dtstop)
 	calorie := 0
 	log.Println(td)
 	for i := 0; i < len(td); i++ {
@@ -136,10 +159,10 @@ func GetUser(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"Detail": map[string]any{
-			"ID":           gu[0].ID,
-			"Name":         gu[0].Name,
-			"Birthdate":    gu[0].Birthdate,
-			"Sex":          gu[0].Sex,
+			"ID":           gu.ID,
+			"Name":         gu.Name,
+			"Birthdate":    gu.Birthdate,
+			"Sex":          gu.Sex,
 			"Consumpted_C": calorie,
 		}})
 }
@@ -160,7 +183,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 	//db.Create(&product) // pass pointer of data to Create
-	model.UserCreate(u)
+	model.CreateUser(u)
 	log.Println(u)
 	c.JSON(200, gin.H{
 		"detail": map[string]any{
@@ -241,7 +264,7 @@ func AddCustomeTR(c *gin.Context) {
 	newu.Name = u.Name
 	newu.Calorie = u.Calorie
 
-	model.AddCustomeTR(newu)
+	model.CreateUserTrainings(newu)
 	log.Println(u)
 	c.JSON(200, gin.H{
 		"detail": map[string]any{
@@ -257,8 +280,8 @@ func DeleteCustomeTR(c *gin.Context) {
 	}
 	newu := model.UserTraining{}
 	newu.ID = 3
-	model.DeleteCustomeTR(newu)
-	log.Println(model.DeleteCustomeTR(newu))
+	model.DeleteUserTrainings(newu)
+	log.Println(model.DeleteUserTrainings(newu))
 	c.JSON(200, gin.H{
 		"detail": map[string]any{
 			"ID": u.ID,
