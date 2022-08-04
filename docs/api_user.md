@@ -24,24 +24,24 @@ POST /api/regsiter
 ```
 
 | param     | type   | description          |
-| --------- | ------ | -------------------- |
-| ID        | string | ID(固有, 最小2文字、最大20文字)|
-| Name      | string | 表示名                |
-| Birthdate | date   | 誕生日                |
-| Sex       | int    | 性別(男、女、その他で1~3) |
-| Height    | int    | 身長                  |
-| Weight    | int    | 体重                  |
-| Password  | string | パスワード              |
+|-----------|--------|----------------------|
+| ID        | string | ID(固有, 最小2文字、最大20文字) |
+| Name      | string | 表示名                  |
+| Birthdate | int    | 誕生日                  |
+| Sex       | int    | 性別(男、女、その他で1~3)      |
+| Height    | int    | 身長                   |
+| Weight    | int    | 体重                   |
+| Password  | string | パスワード                |
 
 ```javascript
 {
     "ID": "Pi",
-        "Name": "ASDF",
-        "Birthdate": 2002-1-1,
-        "Sex": 1,
-        "Height": 169,
-        "Weight": 55,
-        "Password": "Raspberry"
+    "Name": "ASDF",
+    "Birthdate": 12341234,
+    "Sex": 1,
+    "Height": 169,
+    "Weight": 55,
+    "Password": "Raspberry"
 }
 ```
 
@@ -49,26 +49,26 @@ POST /api/regsiter
 
 #### 成功時
 
-| param            | type   | description          |
-| ---------------- | ------ | -------------------- |
-| Detail.ID        | string | ID                   |
-| Detail.Name      | string | 名前                  |
-| Detail.Birthdate | string | 誕生日                |
-| Detail.Sex       | int    | 性別(男、女、その他で1~3) |
-| Detail.Height    | int    | 身長                  |
-| Detail.Weight    | int    | 体重                  |
-| Detail.Objective | string | 目標消費カロリー         |
+| param            | type   | description |
+|------------------|--------|-------------|
+| Detail.ID        | string | ID          |
+| Detail.Name      | string | 名前          |
+| Detail.Birthdate | int    | 誕生日(UNIX)   |
+| Detail.Sex       | int    | 性別(男、女で1/2) |
+| Detail.Height    | int    | 身長          |
+| Detail.Weight    | int    | 体重          |
+| Detail.Objective | string | 目標消費カロリー    |
 
 ```javascript
 {
     "detail": {
         "ID": "Pi",
-            "Name": "ASDF",
-            "Birthdate": 2002-1-1,
-            "Sex": 1,
-            "Height": 169,
-            "Weight": 55,
-            "Objective": 100
+        "Name": "ASDF",
+        "Birthdate": 12341234,
+        "Sex": 1,
+        "Height": 169,
+        "Weight": 55,
+        "Objective": 100
     }
 }
 ```
@@ -101,68 +101,17 @@ CookieのIDとTokenを参照して、承認する。
 ```javascript
 {
     "Detail": {
-        "ID": "Pia",
-            "Result": true
-    }
-}
-```
-
-### 失敗時
-
-#### Request bodyが不完全な時
-
-400 Bad Request
-
-
-## ログイン API
-
-### リクエスト
-
-```
-POST /api/login
-```
-
-| param    | type   | description |
-| -------- | ------ | ------------|
-| ID       | string | ID          |
-| Password | string | パスワード     |
-
-```javascript
-{
-    "ID": "Pi",
-        "Password": "Raspberry"
-}
-```
-
-CookieのIDとTokenを参照して、承認する。
-承認した場合のみ200、承認していない場合403エラー
-
-### レスポンス
-
-#### 成功時
-
-| param         | type    | description |
-| ------------- | ------- | ----------- |
-| Detail.Result | Boolean | trueなら承認  |
-
-```javascript
-{
-    "Detail": {
+        "ID": "Pia", 
         "Result": true
     }
 }
 ```
-成功時のみCookieを設定する
 
 ### 失敗時
 
 #### Request bodyが不完全な時
 
 400 Bad Request
-
-#### Cookieでの承認が出来なかった場合
-
-403 Forbidden
 
 
 ## ユーザー編集 API
@@ -173,15 +122,15 @@ CookieのIDとTokenを参照して、承認する。
 PUT /api/users/editUser
 ```
 
-| param     | type   | description             |
-| --------- | ------ | ----------------------- |
-| ID        | string | ID(固有)                 |
-| Name      | string | 表示名                   |
-| Birthdate | date   | 誕生日                   |
-| Sex       | int    | 性別(男、女、その他で1~3)    |
-| Height    | int    | 身長                     |
-| Weight    | int    | 体重                     |
-| Objective | int    | 目標消費カロリー            |
+| param     | type   | description          |
+|-----------|--------|----------------------|
+| ID        | string | ID(固有)               |
+| Name      | string | 表示名                  |
+| Birthdate | int    | 誕生日(UNIX)            |
+| Sex       | int    | 性別(男、女で1/2)          |
+| Height    | int    | 身長                   |
+| Weight    | int    | 体重                   |
+| Objective | int    | 目標消費カロリー             |
 | Password  | string | 旧パスワード(not required) |
 | NPassword | string | 新パスワード(not required) |
 
@@ -189,7 +138,7 @@ PUT /api/users/editUser
 {
     "ID": "Pi",
         "Name": "ASDF",
-        "Birthdate": 2002-1-2,
+        "Birthdate": 12341234,
         "Sex": 1,
         "Height": 169,
         "Weight": 55,
@@ -207,13 +156,13 @@ CookieのIDとTokenを参照して、承認する。
 
 #### 成功時
 
-| param              | type   | description          |
-| ------------------ | ------ | -------------------- |
-| Detail.ID        | string | ID                   |
-| Detail.Name      | string | 名前                  |
-| Detail.Birthdate | string | 誕生日                |
-| Detail.Sex       | int    | 性別(男、女、その他で1~3) |
-| Detail.Objective | string | 目標消費カロリー         |
+| param            | type   | description |
+|------------------|--------|-------------|
+| Detail.ID        | string | ID          |
+| Detail.Name      | string | 名前          |
+| Detail.Birthdate | int    | 誕生日         |
+| Detail.Sex       | int    | 性別(男、女で1/2) |
+| Detail.Objective | string | 目標消費カロリー    |
 
 ```javascript
 {
@@ -221,7 +170,7 @@ CookieのIDとTokenを参照して、承認する。
     "Detail": {
         "ID": "Pi",
             "Name": "ASDF",
-            "Birthdate": 2002-1-2
+            "Birthdate": 12341234
         "Sex": 1
         "Objective": 100,
     }
@@ -248,7 +197,7 @@ GET /api/users/getUser
 ```
 
 | param     | type | description |
-|-----------| ---- |-------------|
+|-----------|------|-------------|
 | ID        | int  | 検索するID      |
 | StartTime | int  | 開始時刻(UNIX)  |
 | EndTime   | int  | 終了時刻(UNIX)  |
@@ -267,27 +216,27 @@ CookieのIDとTokenを参照して、承認する。
 
 #### 成功時
 
-| param                | type   | description          |
-| -------------------- | ------ | -------------------- |
-| Detail[].ID          | string | ID                   |
-| Detail[].Name        | string | 名前                  |
-| Detail[].Birthdate   | string | 誕生日                |
-| Detail[].Sex         | int    | 性別(男、女、その他で1~3) |
-| Detail[].ConsumptedC | int    | 日間消費カロリー         |
+| param              | type   | description |
+|--------------------|--------|-------------|
+| Detail.ID          | string | ID          |
+| Detail.Name        | string | 名前          |
+| Detail.Birthdate   | int    | 誕生日(UNIX)   |
+| Detail.Sex         | int    | 性別(男、女で1/2) |
+| Detail.Height      | int    | 身長          |
+| Detail.Weight      | int    | 体重          |
+| Detail.ConsumptedC | int    | 日間目標消費カロリー  |
 
 ```javascript
 {
-    "Detail": [
-        {
-            "ID": 1,
-            "Name": "Pi",
-            "Birthdate": 2002-1-1
-            "Sex": 1,
-            "ConsumptedC": 500
-        },{
-            ...
-        }
-    ]
+    "Detail": {
+        "ID": "Pi",
+        "Name": "ASDF",
+        "Birthdate": 12341234,
+        "Sex": 1,
+        "Height": 169,
+        "Weight": 55,
+        "Objective": 100
+    }
 }
 ```
 
