@@ -5,12 +5,12 @@
 ```javascript
 {
     {
-    "ret_msg": "OK",
-    "result": {
-        ...
+        "ret_msg": "OK",
+        "result": {
+    ...
     }
-    "time_now": "1567108756.834357"
-}
+        "time_now": "1567108756.834357"
+    }
 }
 ```
 
@@ -36,12 +36,12 @@ POST /api/regsiter
 ```javascript
 {
     "ID": "Pi",
-    "Name": "ASDF",
-    "Birthdate": 2002-1-1,
-    "Sex": 1,
-    "Height": 169,
-    "Weight": 55,
-    "Password": "Raspberry"
+        "Name": "ASDF",
+        "Birthdate": 2002-1-1,
+        "Sex": 1,
+        "Height": 169,
+        "Weight": 55,
+        "Password": "Raspberry"
 }
 ```
 
@@ -63,12 +63,12 @@ POST /api/regsiter
 {
     "detail": {
         "ID": "Pi",
-        "Name": "ASDF",
-        "Birthdate": 2002-1-1,
-        "Sex": 1,
-        "Height": 169,
-        "Weight": 55,
-        "Objective": 100
+            "Name": "ASDF",
+            "Birthdate": 2002-1-1,
+            "Sex": 1,
+            "Height": 169,
+            "Weight": 55,
+            "Objective": 100
     }
 }
 ```
@@ -86,6 +86,9 @@ POST /api/regsiter
 GET /api/users/checkDuplication/{id}
 ```
 
+CookieのIDとTokenを参照して、承認する。
+承認した場合のみ200、承認していない場合403エラー
+
 ### レスポンス
 
 #### 成功時
@@ -99,7 +102,7 @@ GET /api/users/checkDuplication/{id}
 {
     "Detail": {
         "ID": "Pia",
-        "Result": true
+            "Result": true
     }
 }
 ```
@@ -127,7 +130,7 @@ POST /api/login
 ```javascript
 {
     "ID": "Pi",
-    "Password": "Raspberry"
+        "Password": "Raspberry"
 }
 ```
 
@@ -185,14 +188,14 @@ PUT /api/users/editUser
 ```javascript
 {
     "ID": "Pi",
-    "Name": "ASDF",
-    "Birthdate": 2002-1-2,
-    "Sex": 1,
-    "Height": 169,
-    "Weight": 55,
-    "Objective": 100,
-    "Password": "Raspberry",
-    "NPassword": "R4spberry"
+        "Name": "ASDF",
+        "Birthdate": 2002-1-2,
+        "Sex": 1,
+        "Height": 169,
+        "Weight": 55,
+        "Objective": 100,
+        "Password": "Raspberry",
+        "NPassword": "R4spberry"
 }
 ```
 パスワードを変更する際にはPasswordとNPasswordは必要となる。
@@ -217,8 +220,8 @@ CookieのIDとTokenを参照して、承認する。
     "Message": "Created"
     "Detail": {
         "ID": "Pi",
-        "Name": "ASDF",
-        "Birthdate": 2002-1-2
+            "Name": "ASDF",
+            "Birthdate": 2002-1-2
         "Sex": 1
         "Objective": 100,
     }
@@ -244,15 +247,17 @@ CookieのIDとTokenを参照して、承認する。
 GET /api/users/getUser
 ```
 
-| param | type | description      |
-| ----- | ---- | ---------------- |
-| ID[]  | int  | 検索するID(最大10個)|
+| param     | type | description |
+|-----------| ---- |-------------|
+| ID        | int  | 検索するID      |
+| StartTime | int  | 開始時刻(UNIX)  |
+| EndTime   | int  | 終了時刻(UNIX)  |
 
 ```javascript
 {
-    "ID": [
-        1, 2, 3, ...
-    ]
+    "ID": 1,
+        "StartTime": 1656601200,
+        "EndTime": 1659538800,
 }
 ```
 CookieのIDとTokenを参照して、承認する。

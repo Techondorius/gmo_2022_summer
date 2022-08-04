@@ -8,6 +8,7 @@ import (
 
 func main() {
 	db := model.ConnectionByTCP()
+
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.UpdateUser{})
 	db.AutoMigrate(&model.UserTraining{})
