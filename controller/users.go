@@ -56,6 +56,18 @@ func CheckDuplication(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
+
+	type request struct {
+		ID        string `json:"ID"`
+		Name      string `json:"Name"`
+		Birthdate int    `json:"Birthdate"`
+		Sex       int    `json:"Sex"`
+		Height    int    `json:"Height"`
+		Weight    int    `json:"Weight"`
+		Password  string `json:"Password"`
+	}
+	var req request
+
 	u := model.UpdateUser{
 		ID:        "Pi",
 		Name:      "GHJK",
