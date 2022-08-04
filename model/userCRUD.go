@@ -54,7 +54,7 @@ func GetUserWeight(id string) []User {
 	var u []User
 	_ = db.Where("id = ?", id).Find(&u)
 	//エラー↓
-	//return u.Weight
+	//return u.
 	return u
 }
 

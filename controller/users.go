@@ -29,15 +29,7 @@ func TrainingAdd(c *gin.Context) {
 	} else {
 		//Calorie := cal * u.Weight * ta.TLength
 	}
-	/*
-		newu := model.TrainingHistory{}
 
-		newu.UserID = "PI"
-		newu.CreatedAt = time.Now()
-		newu.UserTraining = u.IsCustom
-		newu.TName = //name
-		newu.TLength = u.TLength
-		newu.ConsumptingC = */
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)
 		c.JSON(200, gin.H{"message": "Update Failed"})
