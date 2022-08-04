@@ -77,14 +77,24 @@ func CheckCookie() gin.HandlerFunc {
 		token, _ := c.Cookie("token")
 		if res := model.FindCookie(userID, token); res == "" {
 			c.JSON(403, nil)
+			c.SetCookie("userID", "", 604800, "/", "localhost", false, true)
+			c.SetCookie("token", "", 604800, "/", "localhost", false, true)
+			c.Abort()
+			return
 		}
 		pw := model.GetPassword(userID)
 		if err := bcrypt.CompareHashAndPassword([]byte(token), []byte(pw)); err != nil {
 			c.JSON(403, nil)
+			c.SetCookie("userID", "", 604800, "/", "localhost", false, true)
+			c.SetCookie("token", "", 604800, "/", "localhost", false, true)
 			c.Abort()
+			return
 		} else {
-
 			c.Next()
 		}
 	}
+}
+
+func BasicResponse(c *gin.Context) {
+
 }
