@@ -22,6 +22,18 @@
 ```
 GET /api/training/
 ```
+
+| column | type | description |
+|--|------|-------------|
+| StartTime | int  | 開始日時(UNIX)  |
+| EndTime | int  | 終了日時(UNIX)  |
+
+```javascript
+{
+    "StartTime": 1656601200,
+    "EndTime": 1659538800
+}
+```
 CookieのIDとTokenを参照して、承認する。
 承認した場合のみ200、承認していない場合403エラー
 
@@ -31,13 +43,13 @@ CookieのIDとTokenを参照して、承認する。
 
 200 OK
 
-| param                 | type     | description    |
-| --------------------- | -------- | -------------- |
-| Detail[].ID           | int      | トレーニング履歴ID |
-| Detail[].Time         | datetime | TR終了時刻       |
-| Detail[].TName        | string   | トレーニング名     |
-| Detail[].TLength      | int      | TR時間          |
-| Detail[].ConsumptingC | int      | 消費カロリー       |
+| param                 | type   | description  |
+| --------------------- |--------|--------------|
+| Detail[].ID           | int    | トレーニング履歴ID   |
+| Detail[].Time         | int    | TR終了時刻(UNIX) |
+| Detail[].TName        | string | トレーニング名      |
+| Detail[].TLength      | int    | TR時間         |
+| Detail[].ConsumptingC | int    | 消費カロリー       |
 
 ```javascript
 {
@@ -74,17 +86,19 @@ CookieのIDとTokenを参照して、承認する。
 POST /api/training/add
 ```
 
-| column     | type    | description              |
-| ---------- | ------- | ------------------------ |
-| ID         | int     | トレーニングID              |
-| IsCustomed | boolean | 真なら自作TR               |
+| column     | type    | description       |
+|------------|---------|-------------------|
+| ID         | int     | トレーニングID          |
+| IsCustomed | boolean | 真なら自作TR           |
 | TLength    | int     | TR時間(初期TRの場合のみ必要) |
+| TWhen      | int     | TR終了時刻(UNIX)      |
 
 ```javascript
 {
     "ID": 107,
     "IsCustom": false,
-    "TLength": 120
+    "TLength": 120,
+    "TWhen": 1659592629
 }
 ```
 
