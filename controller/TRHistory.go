@@ -3,17 +3,28 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"gmo_2022_summer/model"
+	"log"
 )
 
 func GetTRHis(c *gin.Context) {
-	id, _ := c.Get("ID")
-	res, err := model.ReadHistoryByUser(id)
+	type request struct {
+		ID        int `json:"ID"`
+		StartTime int `json:"StartTime"`
+		EndTime   int `json:"EndTime"`
+	}
+	var req request
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, nil)
+		return
+	}
+
+	res, err := model.ReadHistoryByUser(req.ID)
 	if err != nil {
-		c.Set("detail", nil)
-		c.Set("err", true)
+		c.JSON(400, nil)
 	} else {
-		c.Set("detail", res)
-		c.Set("err", false)
+		log.Println(res)
+		c.JSON(200, res)
 	}
 }
 

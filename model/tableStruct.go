@@ -31,13 +31,13 @@ type UserTraining struct {
 }
 
 type TrainingHistory struct {
-	ID           int       `gorm:"primaryKey"`
-	UserID       string    `gorm:"not null"`
-	CreatedAt    time.Time `gorm:"autoCreateTime"`
-	UserTraining bool      `gorm:"not null"`
-	TName        string    `gorm:"not null"`
-	TLength      string    `gorm:"not null"`
-	ConsumptingC int       `gorm:"not null"`
+	ID           int       `gorm:"primaryKey" json:"ID"`
+	UserID       string    `gorm:"not null" json:"UserID"`
+	CreatedAt    time.Time `gorm:"not null" json:"Time"`
+	TName        string    `gorm:"not null" json:"TName"`
+	UserTraining bool      `gorm:"not null" json:"UserTraining"`
+	TLength      string    `gorm:"not null" json:"TLength"`
+	ConsumptingC int       `gorm:"not null" json:"ConsumptingC"`
 }
 
 type CookieData struct {
