@@ -13,25 +13,35 @@ func Register(c *gin.Context) {
 }
 
 //トップページのトレーニング登録画面
-/*
+
 func TrainingAdd(c *gin.Context) {
-	u := model.TrainingHistory{
-		ID: 120,
-		//CreatedAt:    time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
-		UserTraining: true,
-		TLength:      "60",
+	u := model.TrainingAddst{
+		ID:       1,
+		IsCustom: false,
+		TLength:  60,
+		TWhen:    1659592629,
 	}
+	model.GetNameConsumptingC(u.ID, u.IsCustom)
+	/*
+		newu := model.TrainingHistory{}
+
+		newu.UserID = "PI"
+		newu.CreatedAt = time.Now()
+		newu.UserTraining = u.IsCustom
+		newu.TName = //name
+		newu.TLength = u.TLength
+		newu.ConsumptingC = */
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)
 		c.JSON(200, gin.H{"message": "Update Failed"})
 		return
 	}
-	db := model.ConnectionByTCP()
+	//db := model.ConnectionByTCP()
 	//今日の
 
-	var i model.UserTraining
-	result := db.Where("user_id = ?", "1").Find(&i)
-	cal := result["calorie"]
+	//var i model.UserTraining
+	//result := db.Where("user_id = ?", "1").Find(&i)
+	//cal := result["calorie"]
 
 	log.Println(u)
 	c.JSON(200, gin.H{
@@ -43,7 +53,7 @@ func TrainingAdd(c *gin.Context) {
 			"ConsumptedC": 500,
 		}})
 	c.JSON(200, gin.H{"message": "TrainingAdd"})
-}*/
+}
 
 func Login(c *gin.Context) {
 

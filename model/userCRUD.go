@@ -58,6 +58,27 @@ func PeriodData(id string, start time.Time, stop time.Time) []TrainingHistory {
 	return th
 }
 
+//id, is_costom, userIdからトレーニング名、消費カロリーを算出
+func GetNameConsumptingC(id int, is_custome bool) {
+	db := ConnectionByTCP()
+	var ut []UserTraining
+	var pt []PublicTraining
+	if is_custome {
+		_ = db.Debug().Where("id = ?", id).Find(&ut)
+		//log.Println(&ut)
+		//log.Println(&ut.Calorie)
+		return ut.Calorie
+	} else if !is_custome {
+		_ = db.Debug().Where("id = ?", id).Find(&pt)
+		return pt.Mets
+		//log.Println(&pt)
+		//log.Println(pt.Mets)
+
+	}
+	//db.Where("name = ? AND age = ?", "jinzhu", "22").Find(&)
+	// SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
+}
+
 //カスタムトレーニング追加
 func AddCustomeTR(u UserTraining) error {
 	db := ConnectionByTCP()

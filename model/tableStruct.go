@@ -63,3 +63,10 @@ type TrainingTime struct {
 	StartTime int
 	EndTime   int
 }
+
+type TrainingAddst struct {
+	ID int
+	IsCustom bool
+	TLength int
+	TWhen int
+}
