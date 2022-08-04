@@ -15,13 +15,20 @@ func Register(c *gin.Context) {
 //トップページのトレーニング登録画面
 
 func TrainingAdd(c *gin.Context) {
-	u := model.TrainingAddst{
+	ta := model.TrainingAddst{
 		ID:       1,
 		IsCustom: false,
 		TLength:  60,
 		TWhen:    1659592629,
 	}
-	model.GetNameConsumptingC(u.ID, u.IsCustom)
+	u := model.User{}
+	//cal := model.GetNameConsumptingC(ta.ID, ta.IsCustom)
+	//weight := model.GetUserWeight(u.ID)
+	if ta.IsCustom {
+		//Calorie := cal * ta.TLength
+	} else {
+		//Calorie := cal * u.Weight * ta.TLength
+	}
 	/*
 		newu := model.TrainingHistory{}
 
@@ -36,21 +43,15 @@ func TrainingAdd(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "Update Failed"})
 		return
 	}
-	//db := model.ConnectionByTCP()
-	//今日の
-
-	//var i model.UserTraining
-	//result := db.Where("user_id = ?", "1").Find(&i)
-	//cal := result["calorie"]
 
 	log.Println(u)
 	c.JSON(200, gin.H{
 		"Detail": map[string]any{
-			"ID":          1,
-			"Name":        "Pi",
-			"Birthdate":   2002 - 1 - 1,
-			"Sex":         1,
-			"ConsumptedC": 500,
+			"ID": 1004,
+			//"Time": Time.Now(),
+			"TName":   "スクワット",
+			"TLength": 120,
+			//"ConsumptingC": Calorie,
 		}})
 	c.JSON(200, gin.H{"message": "TrainingAdd"})
 }
