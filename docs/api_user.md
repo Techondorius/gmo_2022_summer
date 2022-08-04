@@ -76,14 +76,24 @@ POST /api/regsiter
 目標消費カロリーは身長、体重、性別から算出する。
 
 
-## ID重複チェック API
-
-ユーザーIDは他のユーザーと重複できないため、既に同じIDのユーザーが居るか確認するためのエンドポイント
+## ログイン API
 
 ### リクエスト
 
 ```
-GET /api/users/checkDuplication/{id}
+POST /api/login
+```
+
+| param    | type   | description |
+| -------- | ------ | ------------|
+| ID       | string | ID          |
+| Password | string | パスワード     |
+
+```javascript
+{
+    "ID": "Pi",
+        "Password": "Raspberry"
+}
 ```
 
 CookieのIDとTokenを参照して、承認する。
@@ -93,25 +103,28 @@ CookieのIDとTokenを参照して、承認する。
 
 #### 成功時
 
-| param         | type    | description  |
-| ------------- | ------- | ------------ |
-| Detail.ID     | string  | ID           |
-| Detail.Result | boolean | trueなら重複なし |
+| param         | type    | description |
+| ------------- | ------- | ----------- |
+| Detail.Result | Boolean | trueなら承認  |
 
 ```javascript
 {
     "Detail": {
-        "ID": "Pia", 
         "Result": true
     }
 }
 ```
+成功時のみCookieを設定する
 
 ### 失敗時
 
 #### Request bodyが不完全な時
 
 400 Bad Request
+
+#### Cookieでの承認が出来なかった場合
+
+403 Forbidden
 
 
 ## ユーザー編集 API
