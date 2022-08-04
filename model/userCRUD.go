@@ -45,15 +45,16 @@ func UserUpdate(u User) error {
 func GetUser(id string) []User {
 	db := ConnectionByTCP()
 	var u []User
-	_ = db.Where("user_id = ?", id).Find(&u)
+	_ = db.Where("id = ?", id).Find(&u)
 	return u
 }
 
 //user_idとtraining_dateを指定してTrainingHistoryから情報を抜き出す
-func PeriodData(start time.Time, stop time.Time) []TrainingHistory {
+func PeriodData(id string, start time.Time, stop time.Time) []TrainingHistory {
 	db := ConnectionByTCP()
 	var th []TrainingHistory
-	_ = db.Where("user_id = ? AND ? <=training_date <= ?", "PI", start, stop).Find(&th)
+	//"UO"のところは認証情報からとってくる
+	_ = db.Debug().Where("user_id = ? AND ? <= created_at <= ?", id, start, stop).Find(&th)
 	return th
 }
 

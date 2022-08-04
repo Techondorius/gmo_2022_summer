@@ -40,7 +40,6 @@ func main() {
 
 	custometr := r.Group("/api/customeTR")
 	{
-		//トレーニング一覧取得（後回し）
 		custometr.GET("/", controller.CustomeTR)
 		custometr.POST("/add", controller.AddCustomeTR)
 		custometr.DELETE("/delete", controller.DeleteCustomeTR)

@@ -59,7 +59,7 @@ type TRLIst struct {
 }
 
 type TrainingTime struct {
-	ID        int
+	UserID    string
 	StartTime int
 	EndTime   int
 }
