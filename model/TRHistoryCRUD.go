@@ -2,7 +2,6 @@ package model
 
 import "time"
 
-//トップページの履歴追加
 func CreateTrainingHistory(u TrainingHistory) error {
 	db := ConnectionByTCP()
 	result := db.Create(u)
@@ -13,7 +12,7 @@ func CreateTrainingHistory(u TrainingHistory) error {
 	}
 }
 
-//user_idとtraining_dateを指定してTrainingHistoryから情報を抜き出す
+// 始端と終端が必要
 func ReadTrainingHistory(id string, start time.Time, stop time.Time) []TrainingHistory {
 	db := ConnectionByTCP()
 	var th []TrainingHistory

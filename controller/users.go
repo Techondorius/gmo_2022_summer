@@ -13,9 +13,9 @@ func Register(c *gin.Context) {
 }
 
 //トップページのトレーニング登録画面
-
-func TrainingAdd(c *gin.Context) {
-	ta := model.TrainingAddst{
+/*
+//func TrainingAdd(c *gin.Context) {
+//	ta := model.TrainingAddst{
 		ID:       1,
 		UserID:   "Pi",
 		IsCustom: false,
@@ -57,6 +57,11 @@ func TrainingAdd(c *gin.Context) {
 			//"ConsumptingC": Calorie,
 		}})
 	c.JSON(200, gin.H{"message": "CreateTrainingHistory"})
+}
+*/
+
+func TrainingAdd(c *gin.Context) {
+	return
 }
 
 func Login(c *gin.Context) {
@@ -171,7 +176,7 @@ func CreateUser(c *gin.Context) {
 	u := model.User{
 		ID:        "Pi",
 		Name:      "ASDF",
-		Birthdate: time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		Birthdate: 12341234,
 		Sex:       1,
 		Height:    169,
 		Weight:    55,
@@ -198,17 +203,18 @@ func CreateUser(c *gin.Context) {
 
 //トレーニング一覧
 func CustomeTR(c *gin.Context) {
-	u := model.UserTraining{
-		UserID: "PI", //cookieから取得
-	}
+	//u := model.UserTraining{
+	//	UserID: "PI", //cookieから取得
+	//}
+	//
+	//pt := model.ReadPublicTrains(123)
+	//ut := model.ReadUserTrainings(u.UserID)
+	//res := pt
+	//asd :=
+	//res = append(res, UTtoTRL(ut)...)
+	//log.Println(res)
 
-	pt := model.ReadPublicTrainigs()
-	ut := model.ReadUserTrainings(u.UserID)
-	res := PTtoTRL(pt)
-	res = append(res, UTtoTRL(ut)...)
-	log.Println(res)
-
-	c.JSON(200, res)
+	c.JSON(200, nil)
 }
 
 type TRLIst struct {
@@ -218,20 +224,19 @@ type TRLIst struct {
 	ConsumptingC int
 }
 
-func PTtoTRL(pt []model.PublicTraining) []TRLIst {
+/*
+func PTtoTRL(pt model.PublicTraining) []TRLIst {
 	var trl []TRLIst
-	log.Println(len(pt))
-	for i := 0; i < len(pt); i++ {
-		tr := TRLIst{
-			ID:           pt[i].ID,
-			Name:         pt[i].Name,
-			UserTR:       false,
-			ConsumptingC: pt[i].Mets,
-		}
-		trl = append(trl, tr)
+	log.Println(pt)
+	tr := TRLIst{
+		ID:           pt.ID,
+		Name:         pt.Name,
+		UserTR:       false,
+		ConsumptingC: pt.Mets,
+	}
 	}
 	return trl
-}
+}*/
 
 func UTtoTRL(ut []model.UserTraining) []TRLIst {
 	var trl []TRLIst

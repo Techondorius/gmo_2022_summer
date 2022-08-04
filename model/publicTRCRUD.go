@@ -1,8 +1,8 @@
 package model
 
-func ReadPublicTrainigs() []PublicTraining {
+func ReadPublicTrains(id int) PublicTraining {
 	db := ConnectionByTCP()
-	var pt []PublicTraining
+	var pt PublicTraining
 	_ = db.Find(&pt)
 	return pt
 }

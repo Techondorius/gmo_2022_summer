@@ -16,6 +16,13 @@ func CreateUserTrainings(u UserTraining) error {
 	}
 }
 
+func ReadUserTrainings(id string) []UserTraining {
+	db := ConnectionByTCP()
+	var ut []UserTraining
+	_ = db.Where("user_id = ?", id).Find(&ut)
+	return ut
+}
+
 //カスタムトレーニング削除
 func DeleteUserTrainings(u UserTraining) error {
 	db := ConnectionByTCP()
@@ -29,11 +36,4 @@ func DeleteUserTrainings(u UserTraining) error {
 	} else {
 		return nil
 	}
-}
-
-func ReadUserTrainings(id string) []UserTraining {
-	db := ConnectionByTCP()
-	var ut []UserTraining
-	_ = db.Where("user_id = ?", id).Find(&ut)
-	return ut
 }

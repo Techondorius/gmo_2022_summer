@@ -31,22 +31,3 @@ func GetUser(id string) User {
 	_ = db.Where("id = ?", id).Find(&u)
 	return u
 }
-
-//id, is_costom, userIdからトレーニング名、消費カロリーを算出
-func GetNameConsumptingC(id int, is_custome bool) (baseCalorie int) {
-	// publicTrainingsから抽出
-	db := ConnectionByTCP()
-	var ut UserTraining
-	var pt PublicTraining
-	if is_custome {
-		_ = db.Debug().Where("id = ?", id).Find(&ut)
-		return ut.Calorie
-	}
-	_ = db.Debug().Where("id = ?", id).Find(&pt)
-	return pt.Mets
-	//log.Println(&pt)
-	//log.Println(pt.Mets)
-
-	//db.Where("name = ? AND age = ?", "jinzhu", "22").Find(&)
-	// SELECT * FROM users WHERE name = 'jinzhu' AND age >= 22;
-}
