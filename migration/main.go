@@ -13,6 +13,5 @@ func main() {
 	db.AutoMigrate(&model.UserTraining{})
 	db.AutoMigrate(&model.PublicTraining{})
 	db.AutoMigrate(&model.TrainingHistory{})
-
 	log.Println("!!")
 }
