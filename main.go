@@ -28,26 +28,29 @@ func main() {
 	{
 		cnr.POST("/register", controller.Register)
 		cnr.POST("/login", controller.Login)
-		cnr.POST("/training/add", controller.TrainingAdd)
 	}
 
 	users := r.Group("/api/users")
 	{
-		users.GET("/checkDuplication/:userID", controller.CheckDuplication)
+		//users.GET("/checkDuplication/:userID", controller.CheckDuplication)
 		users.PUT("/editUser", controller.UpdateUser)
 		users.GET("/getUser", controller.GetUser)
 	}
 
-	custometr := r.Group("/api/customeTR")
+	customTR := r.Group("/api/customTR")
 	{
-		custometr.GET("/", controller.CustomeTR)
-		custometr.POST("/add", controller.AddCustomeTR)
-		custometr.DELETE("/delete", controller.DeleteCustomeTR)
+		customTR.GET("/", controller.CustomeTR)
+		customTR.POST("/add", controller.AddCustomeTR)
+		customTR.DELETE("/delete", controller.DeleteCustomeTR)
+	}
+
+	trainingHis := r.Group("/api/training")
+	{
+		trainingHis.POST("/add", controller.AddTrainingHistory)
+		trainingHis.GET("/", controller.TrainingList)
 	}
 
 	// -------------------------------------------------------------------------
-
-	r.GET("/create", controller.CreateUser)
 
 	r.GET("/ip", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": c.ClientIP()})

@@ -16,7 +16,7 @@ func CreateUser(u User) error {
 func UpdateUser(u User) error {
 	db := Connection()
 
-	result := db.Save(u)
+	result := db.Debug().Save(u)
 	if result.Error != nil {
 		return result.Error
 	} else {
