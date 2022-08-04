@@ -28,6 +28,7 @@ func main() {
 	{
 		cnr.POST("/register", controller.Register)
 		cnr.GET("/login", controller.Login)
+		//cnr.POST("/training/add", controller.TrainingAdd)
 	}
 
 	users := r.Group("/api/users")
@@ -39,11 +40,13 @@ func main() {
 
 	custometr := r.Group("/api/customeTR")
 	{
-        custometr.POST("/add", controller.AddCustomeTR)
+		//トレーニング一覧取得（後回し）
+		custometr.GET("/", controller.CustomeTR)
+		custometr.POST("/add", controller.AddCustomeTR)
+		custometr.DELETE("/delete", controller.DeleteCustomeTR)
 	}
 
-// -------------------------------------------------------------------------
-
+	// -------------------------------------------------------------------------
 
 	r.GET("/create", controller.CreateUser)
 

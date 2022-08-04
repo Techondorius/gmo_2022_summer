@@ -38,7 +38,7 @@ type UserTraining struct {
 	ID      int    `gorm:"primaryKey"`
 	UserID  string `gorm:"not null"`
 	Name    string `gorm:"not null"`
-	Calorie string `gorm:"not null"`
+	Calorie int    `gorm:"not null"`
 }
 
 type TrainingHistory struct {
@@ -49,4 +49,17 @@ type TrainingHistory struct {
 	TName        string    `gorm:"not null"`
 	TLength      string    `gorm:"not null"`
 	ConsumptingC int       `gorm:"not null"`
+}
+
+type TRLIst struct {
+	ID           int
+	Name         string
+	UserTR       bool
+	ConsumptingC int
+}
+
+type TrainingTime struct {
+	ID        int
+	StartTime int
+	EndTime   int
 }

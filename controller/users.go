@@ -9,9 +9,41 @@ import (
 )
 
 func Register(c *gin.Context) {
-
 	c.JSON(200, gin.H{"message": "Register"})
 }
+
+//トップページのトレーニング登録画面
+/*
+func TrainingAdd(c *gin.Context) {
+	u := model.TrainingHistory{
+		ID: 120,
+		//CreatedAt:    time.Date(2022, 4, 1, 0, 0, 0, 0, time.Local),
+		UserTraining: true,
+		TLength:      "60",
+	}
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Update Failed"})
+		return
+	}
+	db := model.ConnectionByTCP()
+	//今日の
+
+	var i model.UserTraining
+	result := db.Where("user_id = ?", "1").Find(&i)
+	cal := result["calorie"]
+
+	log.Println(u)
+	c.JSON(200, gin.H{
+		"Detail": map[string]any{
+			"ID":          1,
+			"Name":        "Pi",
+			"Birthdate":   2002 - 1 - 1,
+			"Sex":         1,
+			"ConsumptedC": 500,
+		}})
+	c.JSON(200, gin.H{"message": "TrainingAdd"})
+}*/
 
 func Login(c *gin.Context) {
 
@@ -72,10 +104,42 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Update"})
 }
 
+//user_idの取り方
+//今日のカロリーを算出する
 func GetUser(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "Get"})
+	tt := model.TrainingTime{
+		ID:        1,
+		StartTime: 1656601200,
+		EndTime:   1659538800,
+	}
+	u := model.User{}
+	gu := model.GetUser(u.ID)
+	//今日のカロリーを取得したい
+	dtstart := time.Unix(int64(tt.StartTime), 0)
+	dtstop := time.Unix(int64(tt.EndTime), 0)
+	td := model.PeriodData(dtstart, dtstop)
+	calorie := 0
+	for i := 0; i < len(td); i++ {
+		//log.Println(td[i])
+		calorie += td[i].ConsumptingC
+	}
+	// type gu is []User
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Update Failed"})
+		return
+	}
+	c.JSON(200, gin.H{
+		"Detail": map[string]any{
+			"ID":          gu[0].ID,
+			"Name":        gu[0].Name,
+			"Birthdate":   gu[0].Birthdate,
+			"Sex":         gu[0].Sex,
+			"ConsumptedC": calorie,
+		}})
 }
 
+/*
 func ShowTables() {
 	db := model.Connection()
 	rows, _ := db.Raw("show tables").Rows()
@@ -87,9 +151,9 @@ func ShowTables() {
 		log.Printf(table)
 	}
 }
-
+*/
 func CreateUser(c *gin.Context) {
-	ShowTables()
+	//ShowTables()
 	// var u model.User
 	//u := model.User
 	u := model.User{
@@ -120,10 +184,63 @@ func CreateUser(c *gin.Context) {
 		}})
 }
 
+//トレーニング一覧
+func CustomeTR(c *gin.Context) {
+	u := model.UserTraining{
+		UserID: "PI", //cookieから取得
+	}
+
+	pt := model.ReadPublicTrainigs()
+	ut := model.ReadUserTrainings(u.UserID)
+	res := PTtoTRL(pt)
+	res = append(res, UTtoTRL(ut)...)
+	log.Println(res)
+
+	c.JSON(200, res)
+}
+
+type TRLIst struct {
+	ID           int
+	Name         string
+	UserTR       bool
+	ConsumptingC int
+}
+
+func PTtoTRL(pt []model.PublicTraining) []TRLIst {
+	var trl []TRLIst
+	log.Println(len(pt))
+	for i := 0; i < len(pt); i++ {
+		tr := TRLIst{
+			ID:           trl[i].ID,
+			Name:         trl[i].Name,
+			UserTR:       false,
+			ConsumptingC: trl[i].ConsumptingC,
+		}
+		trl = append(trl, tr)
+	}
+	return trl
+}
+
+func UTtoTRL(ut []model.UserTraining) []TRLIst {
+	var trl []TRLIst
+	log.Println(len(ut))
+	for i := 0; i < len(ut); i++ {
+		log.Println(ut[i])
+		tr := TRLIst{
+			ID:           ut[i].ID,
+			Name:         ut[i].Name,
+			UserTR:       true,
+			ConsumptingC: ut[i].Calorie,
+		}
+		trl = append(trl, tr)
+	}
+	return trl
+}
+
 func AddCustomeTR(c *gin.Context) {
 	u := model.UserTraining{
 		Name:    "kensui",
-		Calorie: "10",
+		Calorie: 10,
 	}
 	if err := c.Bind(&u); err != nil {
 		log.Println(err)
@@ -145,3 +262,49 @@ func AddCustomeTR(c *gin.Context) {
 			"Calolie": u.Calorie,
 		}})
 }
+func DeleteCustomeTR(c *gin.Context) {
+	u := model.UserTraining{
+		ID: 3,
+	}
+	newu := model.UserTraining{}
+	newu.ID = 3
+	model.DeleteCustomeTR(newu)
+	log.Println(model.DeleteCustomeTR(newu))
+	c.JSON(200, gin.H{
+		"detail": map[string]any{
+			"ID": u.ID,
+		}})
+}
+
+/*
+func EditTrainingHistory(c *gin.Context){
+    u := model.TrainingHistory{
+		ID: 107,
+		UserTraining: false,
+		TLength: "120",
+	}
+	if err := c.Bind(&u); err != nil {
+		log.Println(err)
+		c.JSON(200, gin.H{"message": "Update Failed"})
+		return
+	}
+	newu := model.TrainingHistory{}
+	newu.UserID = "PI" //cookieから取得
+	newu.Name = u.Name
+	newu.Calorie = u.Calorie
+
+	model.AddCustomeTR(newu)
+	log.Println(u)
+	c.JSON(200, gin.H{
+		"detail": map[string]any{
+			"UserId":  "PI", //Cookieから取得
+			"UserTR":  true,
+			"Name":    u.Name,
+			"Calolie": u.Calorie,
+		}})
+}
+
+func DeleteTrainingHistory(){
+
+}
+*/
