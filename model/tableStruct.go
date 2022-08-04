@@ -8,7 +8,7 @@ type User struct {
 	Height    int    `gorm:"not null"`
 	Weight    int    `gorm:"not null"`
 	Objective int    `gorm:"not null"`
-	Password  string `gorm:"not null"`
+	Password  string `gorm:"not null" json:"-"`
 }
 
 // カロリー計算方法 = Calorie * UnitTime * 回数(or n分)

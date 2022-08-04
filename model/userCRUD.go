@@ -1,8 +1,8 @@
 package model
 
-//ユーザー登録
+// CreateUser ユーザー登録
 func CreateUser(u User) error {
-	db := ConnectionByTCP()
+	db := Connection()
 	//db.Create(&product) // pass pointer of data to Create
 	result := db.Create(u)
 	if result.Error != nil {
@@ -12,9 +12,9 @@ func CreateUser(u User) error {
 	}
 }
 
-//ユーザー情報変更
+// UpdateUser ユーザー情報変更
 func UpdateUser(u User) error {
-	db := ConnectionByTCP()
+	db := Connection()
 
 	result := db.Save(u)
 	if result.Error != nil {
@@ -24,9 +24,9 @@ func UpdateUser(u User) error {
 	}
 }
 
-//ユーザー情報表示
+// GetUser ユーザー情報表示
 func GetUser(id string) User {
-	db := ConnectionByTCP()
+	db := Connection()
 	var u User
 	_ = db.Where("id = ?", id).Find(&u)
 	return u

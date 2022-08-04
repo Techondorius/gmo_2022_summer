@@ -2,6 +2,7 @@ package controller
 
 import (
 	"gmo_2022_summer/model"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"math"
 	"time"
@@ -31,58 +32,63 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	hashedPW, _ := bcrypt.GenerateFromPassword([]byte(u.Password), 4)
+	u.Password = string(hashedPW)
+
 	// 年齢計算
 	bDtimeTime := time.Unix(int64(u.Birthdate), 0)
 	age := RoundTime((time.Now()).Sub(bDtimeTime).Seconds() / 31207680)
 
 	// objective計算
-	if u.Sex == 1 {
-		if age <= 7 {
-			u.Objective = 1550
-		} else if age <= 9 {
-			u.Objective = 1850
-		} else if age <= 11 {
-			u.Objective = 2250
-		} else if age <= 14 {
-			u.Objective = 2600
-		} else if age <= 17 {
-			u.Objective = 2800
-		} else if age <= 29 {
-			u.Objective = 2650
-		} else if age <= 49 {
-			u.Objective = 2700
-		} else if age <= 64 {
-			u.Objective = 2600
-		} else if age <= 74 {
-			u.Objective = 2400
+	if true {
+		if u.Sex == 1 {
+			if age <= 7 {
+				u.Objective = 1550
+			} else if age <= 9 {
+				u.Objective = 1850
+			} else if age <= 11 {
+				u.Objective = 2250
+			} else if age <= 14 {
+				u.Objective = 2600
+			} else if age <= 17 {
+				u.Objective = 2800
+			} else if age <= 29 {
+				u.Objective = 2650
+			} else if age <= 49 {
+				u.Objective = 2700
+			} else if age <= 64 {
+				u.Objective = 2600
+			} else if age <= 74 {
+				u.Objective = 2400
+			} else {
+				u.Objective = 2100
+			}
 		} else {
-			u.Objective = 2100
-		}
-	} else {
-		if age <= 7 {
-			u.Objective = 1450
-		} else if age <= 9 {
-			u.Objective = 1700
-		} else if age <= 11 {
-			u.Objective = 2100
-		} else if age <= 14 {
-			u.Objective = 2400
-		} else if age <= 17 {
-			u.Objective = 2300
-		} else if age <= 29 {
-			u.Objective = 2000
-		} else if age <= 49 {
-			u.Objective = 2050
-		} else if age <= 64 {
-			u.Objective = 1950
-		} else if age <= 74 {
-			u.Objective = 1850
-		} else {
-			u.Objective = 1650
+			if age <= 7 {
+				u.Objective = 1450
+			} else if age <= 9 {
+				u.Objective = 1700
+			} else if age <= 11 {
+				u.Objective = 2100
+			} else if age <= 14 {
+				u.Objective = 2400
+			} else if age <= 17 {
+				u.Objective = 2300
+			} else if age <= 29 {
+				u.Objective = 2000
+			} else if age <= 49 {
+				u.Objective = 2050
+			} else if age <= 64 {
+				u.Objective = 1950
+			} else if age <= 74 {
+				u.Objective = 1850
+			} else {
+				u.Objective = 1650
+			}
 		}
 	}
 
-	if err := model.UserCreate(u); err != nil {
+	if err := model.CreateUser(u); err != nil {
 		c.JSON(400, gin.H{"message": "ID might be already taken"})
 		return
 	}
@@ -143,8 +149,23 @@ func TrainingAdd(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-
-	c.JSON(200, gin.H{"message": "Login"})
+	type request struct {
+		ID       string `json:"ID"`
+		Password string `json:"Password"`
+	}
+	var req request
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, nil)
+		return
+	}
+	u := model.GetUser(req.ID)
+	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(req.Password)); err != nil {
+		c.JSON(403, gin.H{
+			"Message": "Password is wrong",
+		})
+		return
+	}
+	c.JSON(200, gin.H{"Detail": true})
 }
 
 func CheckDuplication(c *gin.Context) {
@@ -252,7 +273,7 @@ func UpdateUser(c *gin.Context) {
 		}
 	*/
 
-	model.UserUpdate(newu)
+	model.UpdateUser(newu)
 	//log.Println(u)
 	//model.CreateUser(u)
 	log.Println(u)

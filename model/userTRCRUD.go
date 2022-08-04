@@ -2,9 +2,9 @@ package model
 
 import "log"
 
-//カスタムトレーニング追加
+// CreateUserTrainings カスタムトレーニング追加
 func CreateUserTrainings(u UserTraining) error {
-	db := ConnectionByTCP()
+	db := Connection()
 	log.Println(u)
 	result := db.Create(&u)
 	log.Println(result)
@@ -23,7 +23,7 @@ func ReadUserTrainings(id string) []UserTraining {
 	return ut
 }
 
-//カスタムトレーニング削除
+// DeleteUserTrainings カスタムトレーニング削除
 func DeleteUserTrainings(u UserTraining) error {
 	db := ConnectionByTCP()
 	log.Println(u)
