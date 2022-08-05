@@ -20,10 +20,8 @@ services:
       - ./tmp/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
-    environment:
-      TZ: Asia/Tokyo
-      MYSQL_DATABASE: gin_app
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    env_file:
+      - .env
     command: mysqld
     cap_add:
       - SYS_NICE

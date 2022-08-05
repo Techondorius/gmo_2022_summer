@@ -1,7 +1,5 @@
 package model
 
-import "log"
-
 // CreateUserTrainings カスタムトレーニング追加
 func CreateUserTrainings(u UserTraining) error {
 	db := Connection()
@@ -28,13 +26,9 @@ func ReadPublicTrainings() []PublicTraining {
 }
 
 // DeleteUserTrainings カスタムトレーニング削除
-func DeleteUserTrainings(u UserTraining) error {
+func DeleteUserTrainings(u int) error {
 	db := Connection()
-	log.Println(u)
-	//"10"のところにuser_id認証データ持ってくる
-	result := db.Delete(&u, 3)
-	log.Println(result)
-	log.Println(result.Error)
+	result := db.Delete(u)
 	if result.Error != nil {
 		return result.Error
 	} else {
