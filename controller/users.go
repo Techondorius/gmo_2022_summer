@@ -103,7 +103,7 @@ func Register(c *gin.Context) {
 	}
 
 	if err := model.CreateUser(u); err != nil {
-		c.JSON(400, gin.H{"message": "ID might be already taken"})
+		c.JSON(400, gin.H{"message": "ID might be already taken(SQL insert error)"})
 		return
 	}
 
@@ -191,45 +191,14 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(200, map[string]any{"Detail": newu})
 }
 
-//user_idの取り方
-//今日のカロリーを算出する
 func GetUser(c *gin.Context) {
 	type request struct {
-		ID        int `json:"ID" binding:"required"`
-		StartTime int `json:"StartTime" binding:"required"`
-		EndTime   int `json:"EndTime" binding:"required"`
+		ID string `json:"ID" binding:"required"`
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, nil)
 		return
 	}
-	/*
-		u := model.User{}
-		gu := model.GetUser(tt.UserID)
-		//今日のカロリーを取得したい
-		dtstart := time.Unix(int64(tt.StartTime), 0)
-		dtstop := time.Unix(int64(tt.EndTime), 0)
-		td := model.ReadTrainingHistory(tt.UserID, dtstart, dtstop)
-		calorie := 0
-		log.Println(td)
-		for i := 0; i < len(td); i++ {
-			log.Println(td[i])
-			calorie += td[i].ConsumptingC
-		}
-		log.Println(calorie)
-		// type gu is []User
-		if err := c.Bind(&u); err != nil {
-			log.Println(err)
-			c.JSON(200, gin.H{"message": "Update Failed"})
-			return
-		}
-		c.JSON(200, gin.H{
-			"Detail": map[string]any{
-				"ID":           gu.ID,
-				"Name":         gu.Name,
-				"Birthdate":    gu.Birthdate,
-				"Sex":          gu.Sex,
-				"Consumpted_C": calorie,
-			}})*/
+	c.JSON(200, gin.H{"Details": model.GetUser(req.ID)})
 }

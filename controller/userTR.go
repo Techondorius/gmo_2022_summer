@@ -15,6 +15,21 @@ type AllTypeTR struct {
 	ConsumptingC int    `json:"ConsumptingC"`
 }
 
+func AddPublicTrainings(c *gin.Context) {
+	model.CreatePublicTrainings(model.PublicTraining{
+		Name: "asdf",
+		Mets: 12,
+	})
+	model.CreatePublicTrainings(model.PublicTraining{
+		Name: "qwer",
+		Mets: 10,
+	})
+	model.CreatePublicTrainings(model.PublicTraining{
+		Name: "zxcv",
+		Mets: 8,
+	})
+}
+
 func CustomeTR(c *gin.Context) {
 	type request struct {
 		UserID string `json:"UserID" binding:"required"`
@@ -50,7 +65,7 @@ func TrainingList(userID string) []AllTypeTR {
 			ID:           ut[i].ID,
 			Name:         ut[i].Name,
 			UserTraining: true,
-			ConsumptingC: pt[i].Mets,
+			ConsumptingC: ut[i].Calorie,
 		})
 	}
 	return attr
@@ -63,6 +78,7 @@ func AddCustomeTR(c *gin.Context) {
 		ConsumptingC int    `json:"ConsumptingC" binding:"required"`
 	}
 	var req request
+	log.Println("asdf")
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"detail": 1})
 		return
@@ -72,6 +88,8 @@ func AddCustomeTR(c *gin.Context) {
 	if err := copier.Copy(&ut, &req); err != nil {
 		c.JSON(400, gin.H{"detail": 2})
 	}
+	ut.Calorie = req.ConsumptingC
+	log.Println(ut)
 
 	if err := model.CreateUserTrainings(ut); err != nil {
 		c.JSON(400, gin.H{"detail": 3})

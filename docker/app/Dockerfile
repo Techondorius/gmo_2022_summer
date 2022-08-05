@@ -1,9 +1,3 @@
-FROM golang:1.18-alpine
-
-WORKDIR /go/src
-COPY . .
-
-RUN apk upgrade --update && \
-    apk --no-cache add git
+FROM kazoomy/gmo2022:latest
 
 CMD ["go", "run", "main.go"]
