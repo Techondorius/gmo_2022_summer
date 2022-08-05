@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 func CreateTrainingHistory(u TrainingHistory) error {
 	db := Connection()
 	result := db.Create(u)
@@ -13,10 +11,10 @@ func CreateTrainingHistory(u TrainingHistory) error {
 }
 
 // ReadTrainingHistory 始端と終端が必要
-func ReadTrainingHistory(id string, start time.Time, stop time.Time) []TrainingHistory {
+func ReadTrainingHistory(id string, start int, end int) []TrainingHistory {
 	db := Connection()
 	var th []TrainingHistory
 	//"UO"のところは認証情報からとってくる
-	_ = db.Debug().Where("user_id = ? AND ? <= created_at <= ?", id, start, stop).Find(&th)
+	_ = db.Debug().Where("user_id = ? AND t_when >= ? AND ", id, start, end).Find(&th)
 	return th
 }
