@@ -5,6 +5,8 @@ import (
 	"github.com/jinzhu/copier"
 	"gmo_2022_summer/model"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+
 	//"log"
 	"math"
 	"time"
@@ -36,12 +38,12 @@ func Register(c *gin.Context) {
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, nil)
+		c.JSON(400, gin.H{"Detail": 1})
 		return
 	}
 	var u model.User
 	if err := copier.Copy(&u, &req); err != nil {
-		c.JSON(400, nil)
+		c.JSON(400, gin.H{"Detail": 2})
 		return
 	}
 
@@ -115,7 +117,7 @@ func Login(c *gin.Context) {
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, nil)
+		c.JSON(400, gin.H{"Detail": 1})
 		return
 	}
 	if !checkPW(req.ID, req.Password) {
@@ -143,7 +145,6 @@ func RoundTime(input float64) int {
 }
 
 func UpdateUser(c *gin.Context) {
-
 	type request struct {
 		ID        string `json:"ID" binding:"required"`
 		Name      string `json:"Name" binding:"required"`
@@ -156,15 +157,23 @@ func UpdateUser(c *gin.Context) {
 		NPassword string `json:"NPassword" json:"-"`
 	}
 	var req request
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, nil)
 		return
 	}
 
-	if !checkPW(req.ID, req.Password) {
-		c.JSON(403, nil)
-		return
+	log.Println(req.Password)
+	log.Println(req.Password != "" || req.NPassword == "")
+
+	if (req.Password == "") || (req.NPassword == "") {
+		req.NPassword = ""
+		log.Println("CHECK")
+	} else {
+		log.Println("here")
+		if !checkPW(req.ID, req.Password) {
+			c.JSON(403, nil)
+			return
+		}
 	}
 
 	req.Password = req.NPassword

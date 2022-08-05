@@ -37,7 +37,6 @@ func main() {
 
 	users := r.Group("/api/users")
 	{
-		//users.GET("/checkDuplication/:userID", controller.CheckDuplication)
 		users.PUT("/editUser", controller.UpdateUser)
 		users.GET("/getUser", controller.GetUser)
 	}
