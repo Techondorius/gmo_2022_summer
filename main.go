@@ -29,12 +29,12 @@ func main() {
 	users := r.Group("/api/users")
 	{
 		users.PUT("/editUser", controller.UpdateUser)
-		users.GET("/getUser", controller.GetUser)
+		users.POST("/getUser", controller.GetUser)
 	}
 
 	customTR := r.Group("/api/customTR")
 	{
-		customTR.GET("/", controller.CustomeTR)
+		customTR.POST("/", controller.CustomeTR)
 		customTR.POST("/add", controller.AddCustomeTR)
 		customTR.DELETE("/delete", controller.DeleteCustomeTR)
 	}
@@ -42,7 +42,7 @@ func main() {
 	trainingHis := r.Group("/api/training")
 	{
 		trainingHis.POST("/add", controller.AddTrainingHistory)
-		trainingHis.GET("/", controller.ShowTrainingHistory)
+		trainingHis.POST("/", controller.ShowTrainingHistory)
 	}
 
 	r.GET("/api/addpublictrainings/", controller.AddPublicTrainings)

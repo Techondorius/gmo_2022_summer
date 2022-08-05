@@ -103,7 +103,7 @@ func Register(c *gin.Context) {
 	}
 
 	if err := model.CreateUser(u); err != nil {
-		c.JSON(400, gin.H{"message": "ID might be already taken"})
+		c.JSON(400, gin.H{"message": "ID might be already taken(SQL insert error)"})
 		return
 	}
 
@@ -191,8 +191,6 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(200, map[string]any{"Detail": newu})
 }
 
-//user_idの取り方
-//今日のカロリーを算出する
 func GetUser(c *gin.Context) {
 	type request struct {
 		ID string `json:"ID" binding:"required"`
