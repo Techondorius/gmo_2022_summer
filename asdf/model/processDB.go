@@ -12,11 +12,11 @@ type Product struct {
 	Price uint
 }
 
-func UserRegister(){
+func UserRegister() {
 	db := Connection()
 	//product := Product{Code: "paper", Price: 80}
 	r := gin.Default()
-    r.GET("/", func(c *gin.Context) {
+	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "good"})
 	})
 	//db.Create(&product) // pass pointer of data to Create
