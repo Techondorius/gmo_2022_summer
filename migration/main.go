@@ -1,13 +1,13 @@
-package main
+package migration
 
 import (
-	"gmo_2022_summer/model"
+	"gmo_2022_summer/pkg/model"
 	"log"
 	// "gorm.io/gorm"
 )
 
-func main() {
-	db := model.ConnectionByTCP()
+func Mig() {
+	db := model.Connection()
 
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.UserTraining{})

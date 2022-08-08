@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"gmo_2022_summer/model"
+	"gmo_2022_summer/pkg/model"
 	"log"
 	"time"
 )
@@ -10,7 +10,7 @@ import (
 func AddTrainingHistory(c *gin.Context) {
 	type request struct {
 		UserID   string `json:"UserID" binding:"required"`
-		ID       int    `json:"ID" binding:"required"`
+		TRID       int    `json:"TRID" binding:"required"`
 		IsCustom bool   `json:"IsCustom" binding:"required"`
 		TLength  int    `json:"TLength" binding:"required"`
 		TWhen    int    `json:"TWhen" binding:"required"`
@@ -22,7 +22,7 @@ func AddTrainingHistory(c *gin.Context) {
 		return
 	}
 	if req.IsCustom {
-		tr := model.ReadUserTrainigsByPK(req.UserID, req.ID)
+		tr := model.ReadUserTrainigsByPK(req.UserID, req.TRID)
 		th := model.TrainingHistory{
 			UserID:       req.UserID,
 			TWhen:        req.TWhen,
@@ -36,7 +36,7 @@ func AddTrainingHistory(c *gin.Context) {
 			return
 		}
 	} else {
-		tr := model.ReadPublicTrainingsByPK(req.ID)
+		tr := model.ReadPublicTrainingsByPK(req.TRID)
 		u := model.GetUser(req.UserID)
 		th := model.TrainingHistory{
 			UserID:       req.UserID,

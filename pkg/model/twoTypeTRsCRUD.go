@@ -23,10 +23,10 @@ func CreatePublicTrainings(p PublicTraining) error {
 	}
 }
 
-func ReadUserTrainings(id string) []UserTraining {
+func ReadUserTrainings(userid string) []UserTraining {
 	db := Connection()
 	var ut []UserTraining
-	_ = db.Where("user_id = ?", id).Find(&ut)
+	_ = db.Where("user_id = ?", userid).Find(&ut)
 	return ut
 }
 

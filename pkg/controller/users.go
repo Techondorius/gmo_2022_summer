@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"gmo_2022_summer/pkg/model"
+	"gmo_2022_summer/pkg/view"
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"gmo_2022_summer/model"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 
 	//"log"
 	"math"
@@ -17,8 +19,8 @@ func hashPW(pw string) string {
 	return string(hpw)
 }
 
-func checkPW(id string, pw string) bool {
-	hash := model.GetUser(id).Password
+func checkPW(userid string, pw string) bool {
+	hash := model.GetUser(userid).Password
 	if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(pw)); err != nil {
 		return false
 	} else {
@@ -28,7 +30,7 @@ func checkPW(id string, pw string) bool {
 
 func Register(c *gin.Context) {
 	type request struct {
-		ID        string `json:"ID" binding:"required"`
+		UserID    string `json:"UserID" binding:"required"`
 		Name      string `json:"Name" binding:"required"`
 		Birthdate int    `json:"Birthdate" binding:"required"`
 		Sex       int    `json:"Sex" binding:"required"`
@@ -38,7 +40,11 @@ func Register(c *gin.Context) {
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"Detail": 1})
+		log.Println(req)
+		view.BadRequest(
+			c,
+			"Body not complete",
+		)
 		return
 	}
 	var u model.User
@@ -103,16 +109,16 @@ func Register(c *gin.Context) {
 	}
 
 	if err := model.CreateUser(u); err != nil {
-		c.JSON(400, gin.H{"message": "ID might be already taken(SQL insert error)"})
+		view.BadRequest(c, "UserID is already taken")
 		return
 	}
-
-	c.JSON(200, u)
+	view.StatusOK(c, "OK", u)
+	return
 }
 
 func Login(c *gin.Context) {
 	type request struct {
-		ID       string `json:"ID" binding:"required"`
+		UserID   string `json:"UserID" binding:"required"`
 		Password string `json:"Password" binding:"required"`
 	}
 	var req request
@@ -120,7 +126,7 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"Detail": 1})
 		return
 	}
-	if !checkPW(req.ID, req.Password) {
+	if !checkPW(req.UserID, req.Password) {
 		c.JSON(403, gin.H{
 			"Message": "Password is wrong",
 		})
@@ -146,7 +152,7 @@ func RoundTime(input float64) int {
 
 func UpdateUser(c *gin.Context) {
 	type request struct {
-		ID        string `json:"ID" binding:"required"`
+		UserID    string `json:"UserID" binding:"required"`
 		Name      string `json:"Name" binding:"required"`
 		Birthdate int    `json:"Birthdate" binding:"required"`
 		Sex       int    `json:"Sex" binding:"required"`
@@ -170,7 +176,7 @@ func UpdateUser(c *gin.Context) {
 		log.Println("CHECK")
 	} else {
 		log.Println("here")
-		if !checkPW(req.ID, req.Password) {
+		if !checkPW(req.UserID, req.Password) {
 			c.JSON(403, nil)
 			return
 		}
@@ -193,12 +199,12 @@ func UpdateUser(c *gin.Context) {
 
 func GetUser(c *gin.Context) {
 	type request struct {
-		ID string `json:"ID" binding:"required"`
+		UserID string `json:"UserID" binding:"required"`
 	}
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, nil)
 		return
 	}
-	c.JSON(200, gin.H{"Details": model.GetUser(req.ID)})
+	c.JSON(200, gin.H{"Details": model.GetUser(req.UserID)})
 }

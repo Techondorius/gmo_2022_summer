@@ -25,9 +25,9 @@ func UpdateUser(u User) error {
 }
 
 // GetUser ユーザー情報表示
-func GetUser(id string) User {
+func GetUser(userid string) User {
 	db := Connection()
 	var u User
-	_ = db.Where("id = ?", id).Find(&u)
+	_ = db.Where("id = ?", userid).Find(&u)
 	return u
 }

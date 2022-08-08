@@ -3,31 +3,16 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"gmo_2022_summer/model"
+	"gmo_2022_summer/pkg/model"
 	"log"
 )
 
 // AllTypeTR ConsumptingC has Mets if UserTraining is false and has Consumpting Calorie if true
 type AllTypeTR struct {
-	ID           int    `json:"ID"`
+	TRID           int    `json:"TRID"`
 	Name         string `json:"Name"`
 	UserTraining bool   `json:"UserTraining"`
 	ConsumptingC int    `json:"ConsumptingC"`
-}
-
-func AddPublicTrainings(c *gin.Context) {
-	model.CreatePublicTrainings(model.PublicTraining{
-		Name: "asdf",
-		Mets: 12,
-	})
-	model.CreatePublicTrainings(model.PublicTraining{
-		Name: "qwer",
-		Mets: 10,
-	})
-	model.CreatePublicTrainings(model.PublicTraining{
-		Name: "zxcv",
-		Mets: 8,
-	})
 }
 
 func CustomeTR(c *gin.Context) {
@@ -54,7 +39,7 @@ func TrainingList(userID string) []AllTypeTR {
 	attr := []AllTypeTR{}
 	for i := 0; i < len(pt); i++ {
 		attr = append(attr, AllTypeTR{
-			ID:           pt[i].ID,
+			TRID:           pt[i].TRID,
 			Name:         pt[i].Name,
 			UserTraining: false,
 			ConsumptingC: pt[i].Mets,
@@ -62,7 +47,7 @@ func TrainingList(userID string) []AllTypeTR {
 	}
 	for i := 0; i < len(ut); i++ {
 		attr = append(attr, AllTypeTR{
-			ID:           ut[i].ID,
+			TRID:           ut[i].TRID,
 			Name:         ut[i].Name,
 			UserTraining: true,
 			ConsumptingC: ut[i].Calorie,
@@ -101,7 +86,7 @@ func AddCustomeTR(c *gin.Context) {
 
 func DeleteCustomeTR(c *gin.Context) {
 	type request struct {
-		ID     int    `json:"ID" binding:"required"`
+		TRID     int    `json:"TRID" binding:"required"`
 		UserID string `json:"UserID" binding:"required"`
 	}
 	var req request
@@ -109,7 +94,7 @@ func DeleteCustomeTR(c *gin.Context) {
 		c.JSON(400, gin.H{"Detail": 1})
 		return
 	}
-	if err := model.DeleteUserTrainings(req.ID); err != nil {
+	if err := model.DeleteUserTrainings(req.TRID); err != nil {
 		c.JSON(400, gin.H{"Detail": 2})
 	} else {
 		c.JSON(200, gin.H{"Detail": TrainingList(req.UserID)})
