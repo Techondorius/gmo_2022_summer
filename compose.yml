@@ -19,7 +19,7 @@ services:
     container_name: db
     image: mysql:8.0.15
     volumes:
-      - ./tmp/mysql:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     ports:
       - "3306:3306"
     env_file:

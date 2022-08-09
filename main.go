@@ -1,78 +1,51 @@
 package main
 
 import (
-	// "time"
+	"bytes"
+	"io/ioutil"
 	"log"
+	"time"
 
-	"gmo_2022_summer/pkg/controller"
 	"gmo_2022_summer/migration"
 	"gmo_2022_summer/pkg/model"
+	"gmo_2022_summer/routing"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// for i := 0; i < 20; i ++{
-	// 	log.Println(i)
-	// 	time.Sleep(time.Second)
-	// }
-	db := model.Connection()
-	res := db.Exec("SHOW TABLES")
-	log.Println(res)
-	if res.RowsAffected == 0 {
-		migration.Mig()
+	// DBマイグレーション
+	// model.Connectionがエラー発生しなくなるまで=DBが立ち上がるまで待機
+	// (docker composeで立ち上げると必ずdbのほうが立ち上がり遅い)
+	_, dbConErr := model.Connection()
+	for dbConErr != nil {
+		time.Sleep(time.Second)
+		_, dbConErr = model.Connection()
 	}
+	migration.Mig()
 
-	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	r.Use(logger)
 
-	// ここからCorsの設定
+	r.Use(logger())
+
+	// Cors
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	r.Use(cors.New(config))
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "good"})
-	})
+	// ルーティング
+	routing.Routing(r)
 
-	// cookie is not required to this endpoints
-	cnr := r.Group("/api")
-	{
-		cnr.POST("/register", controller.Register)
-		cnr.POST("/login", controller.Login)
-	}
-
-	users := r.Group("/api/users")
-	{
-		users.PUT("/editUser", controller.UpdateUser)
-		users.POST("/getUser", controller.GetUser)
-	}
-
-	customTR := r.Group("/api/customTR")
-	{
-		customTR.POST("/", controller.CustomeTR)
-		customTR.POST("/add", controller.AddCustomeTR)
-		customTR.DELETE("/delete", controller.DeleteCustomeTR)
-	}
-
-	trainingHis := r.Group("/api/training")
-	{
-		trainingHis.POST("/add", controller.AddTrainingHistory)
-		trainingHis.POST("/", controller.ShowTrainingHistory)
-	}
-
-	r.GET("/api/asdf/:int", controller.AddPublicTrainings)
 	r.Run()
-
 }
 
-func logger(c *gin.Context) {
-	buf := make([]byte, 2048)
-	n, _ := c.Request.Body.Read(buf)
-	b := string(buf[0:n])
-	log.Println("Request full path: " + c.Request.Host + c.Request.URL.Path)
-	log.Println("Request body: " + b)
-	c.Next()
+func logger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ByteBody, _ := ioutil.ReadAll(c.Request.Body)
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(ByteBody))
+		log.Println("endpoint: " + c.FullPath())
+		log.Println("body" + string(ByteBody))
+		c.Next()
+	}
 }

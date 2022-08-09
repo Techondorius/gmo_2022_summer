@@ -38,6 +38,7 @@ func Register(c *gin.Context) {
 		Weight    int    `json:"Weight" binding:"required"`
 		Password  string `json:"Password" binding:"required"`
 	}
+
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Println(req)
@@ -47,11 +48,9 @@ func Register(c *gin.Context) {
 		)
 		return
 	}
+
 	var u model.User
-	if err := copier.Copy(&u, &req); err != nil {
-		c.JSON(400, gin.H{"Detail": 2})
-		return
-	}
+	copier.Copy(&u, &req)
 
 	u.Password = hashPW(u.Password)
 
@@ -113,7 +112,6 @@ func Register(c *gin.Context) {
 		return
 	}
 	view.StatusOK(c, "OK", u)
-	return
 }
 
 func Login(c *gin.Context) {

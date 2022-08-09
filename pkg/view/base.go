@@ -17,7 +17,7 @@ func StatusOK(c *gin.Context, m string, d any) {
 			200,
 			gin.H{
 				"message":     m,
-				"server time": time.Now().Unix(),
+				"server_time": time.Now().Unix(),
 			},
 		)
 	} else {
@@ -26,7 +26,7 @@ func StatusOK(c *gin.Context, m string, d any) {
 			gin.H{
 				"message":     m,
 				"detail":      d,
-				"server time": time.Now().Unix(),
+				"server_time": time.Now().Unix(),
 			},
 		)
 	}
@@ -38,7 +38,7 @@ func BadRequest(c *gin.Context, m string) {
 		400,
 		gin.H{
 			"message":     m,
-			"server time": time.Now().Unix(),
+			"server_time": time.Now().Unix(),
 		},
 	)
 	return

@@ -2,7 +2,7 @@ package model
 
 // CreateUser ユーザー登録
 func CreateUser(u User) error {
-	db := Connection()
+	db, _ := Connection()
 	//db.Create(&product) // pass pointer of data to Create
 	result := db.Create(u)
 	if result.Error != nil {
@@ -14,7 +14,7 @@ func CreateUser(u User) error {
 
 // UpdateUser ユーザー情報変更
 func UpdateUser(u User) error {
-	db := Connection()
+	db, _ := Connection()
 
 	result := db.Debug().Save(u)
 	if result.Error != nil {
@@ -26,7 +26,7 @@ func UpdateUser(u User) error {
 
 // GetUser ユーザー情報表示
 func GetUser(userid string) User {
-	db := Connection()
+	db, _ := Connection()
 	var u User
 	_ = db.Where("id = ?", userid).Find(&u)
 	return u

@@ -1,7 +1,7 @@
 package model
 
 func CreateTrainingHistory(u TrainingHistory) error {
-	db := Connection()
+	db, _ := Connection()
 	result := db.Create(u)
 	if result.Error != nil {
 		return result.Error
@@ -12,7 +12,7 @@ func CreateTrainingHistory(u TrainingHistory) error {
 
 // ReadTrainingHistory 始端と終端が必要
 func ReadTrainingHistory(trid string, start int, end int) []TrainingHistory {
-	db := Connection()
+	db, _ := Connection()
 	var th []TrainingHistory
 	//"UO"のところは認証情報からとってくる
 	_ = db.Debug().Where("user_id = ? AND t_when >= ? AND ", trid, start, end).Find(&th)

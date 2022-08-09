@@ -1,6 +1,8 @@
 package model
 
 import (
+	"errors"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,12 +18,12 @@ func ConnectionByTCP() *gorm.DB {
 	return db
 }
 
-func Connection() *gorm.DB {
+func Connection() (*gorm.DB, error) {
 	dsn := "root:asdl0606@tcp(db:3306)/gin_app?charset=utf8&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		panic(err)
+		return nil, errors.New("Connection falied!!!!!")
 	}
-	return db
+	return db, nil
 }

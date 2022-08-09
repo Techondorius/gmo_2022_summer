@@ -4,7 +4,7 @@ import "log"
 
 // CreateUserTrainings カスタムトレーニング追加
 func CreateUserTrainings(u UserTraining) error {
-	db := Connection()
+	db, _ := Connection()
 	result := db.Create(&u)
 	if result.Error != nil {
 		return result.Error
@@ -14,7 +14,7 @@ func CreateUserTrainings(u UserTraining) error {
 }
 
 func CreatePublicTrainings(p PublicTraining) error {
-	db := Connection()
+	db, _ := Connection()
 	result := db.Create(&p)
 	if result.Error != nil {
 		return result.Error
@@ -24,14 +24,14 @@ func CreatePublicTrainings(p PublicTraining) error {
 }
 
 func ReadUserTrainings(userid string) []UserTraining {
-	db := Connection()
+	db, _ := Connection()
 	var ut []UserTraining
 	_ = db.Where("user_id = ?", userid).Find(&ut)
 	return ut
 }
 
 func ReadUserTrainigsByPK(userid string, pk int) UserTraining {
-	db := Connection()
+	db, _ := Connection()
 	var ut UserTraining
 	result := db.Debug().Where("id = ? AND user_id = ?", pk, userid).Find(&ut)
 	log.Println(result)
@@ -43,14 +43,14 @@ func ReadUserTrainigsByPK(userid string, pk int) UserTraining {
 }
 
 func ReadPublicTrainings() []PublicTraining {
-	db := Connection()
+	db, _ := Connection()
 	var pt []PublicTraining
 	_ = db.Debug().Find(&pt)
 	return pt
 }
 
 func ReadPublicTrainingsByPK(id int) PublicTraining {
-	db := Connection()
+	db, _ := Connection()
 	var pt PublicTraining
 	_ = db.Debug().Where("id = ?", id).Find(&pt)
 	return pt
@@ -58,7 +58,7 @@ func ReadPublicTrainingsByPK(id int) PublicTraining {
 
 // DeleteUserTrainings カスタムトレーニング削除
 func DeleteUserTrainings(u int) error {
-	db := Connection()
+	db, _ := Connection()
 	result := db.Delete(u)
 	if result.Error != nil {
 		return result.Error

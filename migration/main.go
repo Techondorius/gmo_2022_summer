@@ -7,11 +7,11 @@ import (
 )
 
 func Mig() {
-	db := model.Connection()
+	db, _ := model.Connection()
 
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.UserTraining{})
 	db.AutoMigrate(&model.PublicTraining{})
 	db.AutoMigrate(&model.TrainingHistory{})
-	log.Println("!!")
+	log.Println("Migration Completed")
 }
