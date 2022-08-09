@@ -28,6 +28,6 @@ func UpdateUser(u User) error {
 func GetUser(userid string) User {
 	db, _ := Connection()
 	var u User
-	_ = db.Where("id = ?", userid).Find(&u)
+	_ = db.Where("user_id = ?", userid).Find(&u)
 	return u
 }

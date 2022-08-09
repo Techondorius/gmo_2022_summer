@@ -3,16 +3,12 @@ package view
 import (
 	"time"
 
-	"io/ioutil"
-	"log"
-
 	"github.com/gin-gonic/gin"
 )
 
 func StatusOK(c *gin.Context, m string, d any) {
-	body, _ := ioutil.ReadAll(c.Request.Body)
-	log.Println("body:\n" + string(body))
 	if d == nil {
+		Logger(m)
 		c.JSON(
 			200,
 			gin.H{
@@ -21,6 +17,7 @@ func StatusOK(c *gin.Context, m string, d any) {
 			},
 		)
 	} else {
+		Logger(m)
 		c.JSON(
 			200,
 			gin.H{
@@ -34,6 +31,7 @@ func StatusOK(c *gin.Context, m string, d any) {
 }
 
 func BadRequest(c *gin.Context, m string) {
+	Logger(m)
 	c.JSON(
 		400,
 		gin.H{

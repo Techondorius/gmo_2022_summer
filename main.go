@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"time"
@@ -37,15 +38,20 @@ func main() {
 	// ルーティング
 	routing.Routing(r)
 
-	r.Run()
+	_ = r.Run()
 }
 
 func logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ByteBody, _ := ioutil.ReadAll(c.Request.Body)
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(ByteBody))
-		log.Println("endpoint: " + c.FullPath())
-		log.Println("body" + string(ByteBody))
+		log.Println("Endpoint: " + c.FullPath())
+		log.Println("Body: " + string(ByteBody))
+
+		q := c.Request.URL.Query()
+		j, _ := json.Marshal(q)
+		log.Println("Query Params: " + string(j))
+
 		c.Next()
 	}
 }

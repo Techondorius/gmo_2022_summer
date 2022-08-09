@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"gmo_2022_summer/pkg/model"
-	"gmo_2022_summer/pkg/view"
-	"log"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
+	"gmo_2022_summer/pkg/model"
+	"gmo_2022_summer/pkg/view"
 	"golang.org/x/crypto/bcrypt"
 
 	//"log"
@@ -41,7 +39,6 @@ func Register(c *gin.Context) {
 
 	var req request
 	if err := c.ShouldBindJSON(&req); err != nil {
-		log.Println(req)
 		view.BadRequest(
 			c,
 			"Body not complete",
@@ -51,6 +48,15 @@ func Register(c *gin.Context) {
 
 	var u model.User
 	copier.Copy(&u, &req)
+
+	if !CheckUserIDDuplication(u.UserID) {
+		view.BadRequest(
+			c,
+			"UserID is already taken",
+		)
+		return
+
+	}
 
 	u.Password = hashPW(u.Password)
 
@@ -108,7 +114,7 @@ func Register(c *gin.Context) {
 	}
 
 	if err := model.CreateUser(u); err != nil {
-		view.BadRequest(c, "UserID is already taken")
+		view.BadRequest(c, "SQL error has occured")
 		return
 	}
 	view.StatusOK(c, "OK", u)
@@ -131,6 +137,15 @@ func Login(c *gin.Context) {
 		return
 	}
 	c.JSON(200, gin.H{"Detail": true})
+}
+
+func CheckUserIDDuplication(userid string) bool {
+	u := model.GetUser(userid)
+	if u.UserID == "" {
+		return true
+	} else {
+		return false
+	}
 }
 
 func RoundTime(input float64) int {
@@ -166,14 +181,9 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	log.Println(req.Password)
-	log.Println(req.Password != "" || req.NPassword == "")
-
 	if (req.Password == "") || (req.NPassword == "") {
 		req.NPassword = ""
-		log.Println("CHECK")
 	} else {
-		log.Println("here")
 		if !checkPW(req.UserID, req.Password) {
 			c.JSON(403, nil)
 			return
